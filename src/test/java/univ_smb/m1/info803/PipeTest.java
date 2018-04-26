@@ -24,17 +24,17 @@ public class PipeTest {
     @Test
     public void should_Get_A_Spec() throws IOException, ClassNotFoundException {
         PipedWriter pipedWriter = new PipedWriter();
-        PipedReader pipedReader = new PipedReader();
-        pipedReader.connect(pipedWriter);
+        PipedReader pipedReader = new PipedReader(pipedWriter);
 
         Specification spec = new Specification(new ArrayList<>(), 10, 20, 30);
 
-        String rawData = Serializer.serialize(spec);
-        pipedWriter.write(rawData + '\n');
+        Serializer<Specification> specSerializer = new Serializer<>();
+        String rawData = specSerializer.serialize(spec);
+        pipedWriter.write(rawData + "\n");
 
         BufferedReader bufferedReader = new BufferedReader(pipedReader);
 
-        Specification result = (Specification) Serializer.deserialize(bufferedReader.readLine());
+        Specification result = specSerializer.deserialize(bufferedReader.readLine());
         System.out.println(result);
     }
 }

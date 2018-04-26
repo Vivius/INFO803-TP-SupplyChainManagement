@@ -13,10 +13,11 @@ public class SerializerTest {
         // L'objet à traiter
         Specification spec = new Specification(new ArrayList<>(), 1, 1, 1);
 
-        String serializedObject = Serializer.serialize(spec);
+        Serializer<Specification> specSerializer = new Serializer<>();
+        String serializedObject = specSerializer.serialize(spec);
         System.out.println(serializedObject);
 
-        Specification deserializedSpec = (Specification) Serializer.deserialize(serializedObject);
+        Specification deserializedSpec = specSerializer.deserialize(serializedObject);
         System.out.println(deserializedSpec);
     }
 }
