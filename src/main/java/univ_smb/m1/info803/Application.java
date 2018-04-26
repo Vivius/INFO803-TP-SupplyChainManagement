@@ -2,7 +2,7 @@ package univ_smb.m1.info803;
 
 import univ_smb.m1.info803.model.Specification;
 import univ_smb.m1.info803.runnable.PipeRunnable;
-import univ_smb.m1.info803.utils.Transmission;
+import univ_smb.m1.info803.utils.Pipe;
 
 import java.io.*;
 import java.util.Arrays;
@@ -10,20 +10,21 @@ import java.util.Arrays;
 public class Application {
 
     public static void main(String args[]) throws IOException, InterruptedException, ClassNotFoundException {
-        Transmission<Specification> specTransmission = new Transmission<>();
+        Pipe<Specification> specPipe = new Pipe<>();
 
-        Thread th = new Thread(new PipeRunnable(specTransmission));
+        Thread th = new Thread(new PipeRunnable(specPipe));
         th.start();
 
         System.out.println("En cours d'écriture");
         for(int i=0; i<10; ++i) {
-            specTransmission.write(new Specification(Arrays.asList("machin", "truc", "bidule"), 10, 20, 30));
-            Thread.sleep(200);
+            specPipe.write(new Specification(Arrays.asList("machin", "truc", "bidule"), 10, 20, 30));
         }
+
+        Thread.sleep(1000);
 
         System.out.println("En cours de lecture");
         for(int i=0; i<10; ++i) {
-            Specification spec = specTransmission.read();
+            Specification spec = specPipe.read();
             System.out.println(spec);
         }
 

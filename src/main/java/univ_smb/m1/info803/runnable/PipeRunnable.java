@@ -1,17 +1,17 @@
 package univ_smb.m1.info803.runnable;
 
 import univ_smb.m1.info803.model.Specification;
-import univ_smb.m1.info803.utils.Transmission;
+import univ_smb.m1.info803.utils.Pipe;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.Arrays;
 
 public class PipeRunnable implements Runnable {
-    private Transmission<Specification> specTransmission;
+    private Pipe<Specification> specPipe;
 
-    public PipeRunnable(Transmission<Specification> specTransmission) {
-        this.specTransmission = specTransmission;
+    public PipeRunnable(Pipe<Specification> specPipe) {
+        this.specPipe = specPipe;
     }
 
     public void run() {
@@ -22,14 +22,13 @@ public class PipeRunnable implements Runnable {
             try {
 
                 if(count < 10 ) {
-                    Specification spec = specTransmission.read();
+                    Specification spec = specPipe.read();
                     System.out.println(spec);
                 } else {
                     System.out.println("Echange des roles");
 
                     for(int i=0; i<10; ++i) {
-                        specTransmission.write(new Specification(Arrays.asList("ok", "cool"), 11, 22, 33));
-                        Thread.sleep(200);
+                        specPipe.write(new Specification(Arrays.asList("ok", "cool"), 11, 22, 33));
                     }
                     break;
                 }
@@ -39,7 +38,7 @@ public class PipeRunnable implements Runnable {
             } catch (InterruptedIOException e) {
                 Thread.currentThread().interrupt();
                 break;
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 

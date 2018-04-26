@@ -5,15 +5,17 @@ import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
 
-public class Transmission<T> {
+public class Pipe<T> {
     private PipedReader reader;
     private PipedWriter writer;
     private Serializer<T> serializer;
+    private BufferedReader buffer;
 
-    public Transmission() throws IOException {
+    public Pipe() throws IOException {
         this.writer = new PipedWriter();
         this.reader = new PipedReader(this.writer);
         this.serializer = new Serializer<>();
+        this.buffer = new BufferedReader(this.reader);
     }
 
     public void write(T object) throws IOException {
@@ -22,8 +24,7 @@ public class Transmission<T> {
     }
 
     public T read() throws IOException, ClassNotFoundException {
-        BufferedReader bufferedReader = new BufferedReader(reader);
-        String result = bufferedReader.readLine();
+        String result = buffer.readLine();
         return serializer.deserialize(result);
     }
 }
