@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.util.Arrays;
 
+/**
+ * Exemple de thread qui communique grâce au Pipes.
+ */
 public class PipeRunnable implements Runnable {
     private Pipe<Specification> specPipe;
 
@@ -23,6 +26,7 @@ public class PipeRunnable implements Runnable {
 
                 if(count < 10 ) {
                     Specification spec = specPipe.read();
+                    System.out.print(count + ": ");
                     System.out.println(spec);
                 } else {
                     System.out.println("Echange des roles");
@@ -38,6 +42,7 @@ public class PipeRunnable implements Runnable {
             } catch (InterruptedIOException e) {
                 Thread.currentThread().interrupt();
                 break;
+
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

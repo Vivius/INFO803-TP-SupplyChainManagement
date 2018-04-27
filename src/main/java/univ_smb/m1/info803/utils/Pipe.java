@@ -27,4 +27,8 @@ public class Pipe<T> {
         String result = buffer.readLine();
         return serializer.deserialize(result);
     }
+
+    public boolean ready() throws IOException {
+        return reader.ready();
+    }
 }
