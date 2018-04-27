@@ -2,7 +2,7 @@ package univ_smb.m1.info803;
 
 import org.junit.Test;
 import univ_smb.m1.info803.model.Specification;
-import univ_smb.m1.info803.utils.Serializer;
+import univ_smb.m1.info803.util.Serializer;
 
 import java.io.*;
 import java.util.ArrayList;

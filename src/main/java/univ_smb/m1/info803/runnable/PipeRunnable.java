@@ -1,7 +1,7 @@
 package univ_smb.m1.info803.runnable;
 
 import univ_smb.m1.info803.model.Specification;
-import univ_smb.m1.info803.utils.Pipe;
+import univ_smb.m1.info803.util.Pipe;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;

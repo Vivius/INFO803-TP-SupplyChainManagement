@@ -4,10 +4,12 @@ public class SupplierRunnable implements Runnable {
     @Override
     public void run() {
         while(true) {
+
             if(Thread.interrupted()) {
                 Thread.currentThread().interrupt();
                 break;
             }
+
         }
     }
 }

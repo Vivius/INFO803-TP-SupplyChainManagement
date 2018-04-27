@@ -1,4 +1,4 @@
-package univ_smb.m1.info803.utils;
+package univ_smb.m1.info803.util;
 
 import java.io.*;
 import java.util.Base64;
