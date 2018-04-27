@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
+import java.util.List;
 
 public class Pipe<T> {
     private PipedReader reader;
@@ -21,6 +22,14 @@ public class Pipe<T> {
     public void write(T object) throws IOException {
         writer.write(serializer.serialize(object) + "\n");
         writer.flush();
+    }
+
+    public void writeForEach(List<Runnable> runnables, Class targetRunnable, T object) throws IOException {
+        for(Runnable run : runnables) {
+            if(run.getClass().equals(targetRunnable)) {
+                write(object);
+            }
+        }
     }
 
     public T read() throws IOException, ClassNotFoundException {

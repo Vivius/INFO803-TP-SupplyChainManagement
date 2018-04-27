@@ -13,11 +13,16 @@ public class Database {
     private static Database instance;
 
     private int id;
+
     private List<Specification> specifications;
+    private List<Runnable> world;
 
     private Database() {
         this.id = 0;
+
         this.specifications = new ArrayList<>();
+        this.world = new ArrayList<>();
+
         instance = this;
     }
 
@@ -41,9 +46,21 @@ public class Database {
         return null;
     }
 
+    public List<Specification> getSpecifications() {
+        return specifications;
+    }
+
     public Specification addSpecification(Specification spec) {
         Specification uniquSpec = new Specification(getId(), spec.getRequirements(), spec.getCost(), spec.getTime(), spec.getQuantity());
         specifications.add(uniquSpec);
         return uniquSpec;
+    }
+
+    public List<Runnable> getWorld() {
+        return world;
+    }
+
+    public void setWorld(List<Runnable> world) {
+        this.world = world;
     }
 }
