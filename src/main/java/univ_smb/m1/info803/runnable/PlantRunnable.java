@@ -1,31 +1,35 @@
 package univ_smb.m1.info803.runnable;
 
 import univ_smb.m1.info803.model.Specification;
+import univ_smb.m1.info803.model.SpecificationAlteration;
 import univ_smb.m1.info803.util.Pipe;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlantRunnable implements Runnable {
-    private Pipe<Specification> logisticsPipe;
-    private Pipe<Specification> designPipe;
-    private Pipe<Specification> workshopPipe;
+    private Pipe<Specification> logisticsToPlantSpecificationsPipe;
+    private Pipe<Specification> plantToDesignSpecificationsPipe;
+    private Pipe<Specification> plantToWorkshopSpecificationsPipe;
+    private Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe;
 
     private List<Specification> specificationsProcessed;
 
     private Thread workshop;
     private Thread design;
 
-    public PlantRunnable(Pipe<Specification> logisticsPipe) throws IOException {
-        this.logisticsPipe = logisticsPipe;
+    public PlantRunnable(Pipe<Specification> logisticsToPlantSpecificationsPipe) throws IOException {
+        this.logisticsToPlantSpecificationsPipe = logisticsToPlantSpecificationsPipe;
         this.specificationsProcessed = new ArrayList<>();
 
-        this.designPipe = new Pipe<>();
-        this.workshopPipe = new Pipe<>();
+        this.plantToDesignSpecificationsPipe = new Pipe<>();
+        this.plantToWorkshopSpecificationsPipe = new Pipe<>();
+        this.departmentsToPlantAlterationsPipe = new Pipe<>();
 
-        this.workshop = new Thread(new WorkshopRunnable(workshopPipe));
-        this.design = new Thread(new DesignRunnable(designPipe));
+        this.workshop = new Thread(new WorkshopRunnable(plantToWorkshopSpecificationsPipe, departmentsToPlantAlterationsPipe));
+        this.design = new Thread(new DesignRunnable(plantToDesignSpecificationsPipe, departmentsToPlantAlterationsPipe));
 
         this.workshop.start();
         this.design.start();
@@ -42,8 +46,8 @@ public class PlantRunnable implements Runnable {
 
             try {
 
-                if(logisticsPipe.ready()) {
-                    Specification spec = logisticsPipe.read();
+                if(logisticsToPlantSpecificationsPipe.ready()) {
+                    Specification spec = logisticsToPlantSpecificationsPipe.read();
 
                     if(shouldProcessSpecification(spec)) {
                         specificationsProcessed.add(spec);
@@ -53,12 +57,29 @@ public class PlantRunnable implements Runnable {
                         Thread.sleep(1000);
 
                         // Envoi du cahier des charges à l'atelier de prototypage et à l'atelier d'étude
-                        designPipe.write(spec);
-                        workshopPipe.write(spec);
+                        plantToDesignSpecificationsPipe.write(spec);
+                        plantToWorkshopSpecificationsPipe.write(spec);
 
                     } else {
                         // On renvoie la spec si elle ne nous est pas destinée
-                        logisticsPipe.write(spec);
+                        logisticsToPlantSpecificationsPipe.write(spec);
+                    }
+                }
+
+                if(departmentsToPlantAlterationsPipe.ready()) {
+                    SpecificationAlteration alteration = departmentsToPlantAlterationsPipe.read();
+                    System.out.println("Plant " + Thread.currentThread().getId() + " : Réception d'une contre proposition");
+                    System.out.println(alteration);
+
+                    Specification spec = findProcessedSpecification(alteration.getSpecificationId());
+                    if(spec != null) {
+                        spec.addAlteration(alteration);
+
+                        if(spec.getAlterations().size() == 2) {
+                            System.out.println("Les ateliers ont fait leur travail, on envoie le résultat au client");
+                        }
+                    } else {
+                        throw new NullPointerException();
                     }
                 }
 
@@ -78,5 +99,13 @@ public class PlantRunnable implements Runnable {
             }
         }
         return true;
+    }
+
+    private Specification findProcessedSpecification(int id) {
+        List<Specification> result = specificationsProcessed.stream().filter(s -> s.getId() == id).collect(Collectors.toList());
+        if(result.size() > 0) {
+            return result.get(0);
+        }
+        return null;
     }
 }

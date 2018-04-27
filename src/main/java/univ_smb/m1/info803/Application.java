@@ -23,15 +23,15 @@ public class Application {
         List<Thread> threads = new ArrayList<>();
 
         // Création des pipes (pour la communication entre threads)
-        Pipe<Specification> client_logistics_pipe = new Pipe<>();
-        Pipe<Specification> logistics_plant_pipe = new Pipe<>();
+        Pipe<Specification> clientToLogisticsSpecificationsPipe = new Pipe<>();
+        Pipe<Specification> logisticsToPlantSpecificationsPipe = new Pipe<>();
 
         // Création des runnables
         List<Runnable> runnables = new ArrayList<>();
-        runnables.add(new LogisticsRunnable(client_logistics_pipe, logistics_plant_pipe));
+        runnables.add(new LogisticsRunnable(clientToLogisticsSpecificationsPipe, logisticsToPlantSpecificationsPipe));
 
-        runnables.add(new PlantRunnable(logistics_plant_pipe));
-        runnables.add(new PlantRunnable(logistics_plant_pipe));
+        runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe));
+        runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe));
 
         runnables.add(new RetailerRunnable());
         runnables.add(new SupplierRunnable());
@@ -55,7 +55,7 @@ public class Application {
         db.addSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
 
         // Envoi du cahier des charge au logistics runnable
-        client_logistics_pipe.write(db.getSpecification(1));
+        clientToLogisticsSpecificationsPipe.write(db.getSpecification(1));
 
         // Arrêt/Attente des threads
         for(Thread th : threads) {

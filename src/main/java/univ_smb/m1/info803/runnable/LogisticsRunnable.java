@@ -7,12 +7,12 @@ import univ_smb.m1.info803.util.Pipe;
 import java.io.IOException;
 
 public class LogisticsRunnable implements Runnable {
-    private Pipe<Specification> clientPipe;
-    private Pipe<Specification> plantPipe;
+    private Pipe<Specification> clientToLogisticsSpecificationsPipe;
+    private Pipe<Specification> logisticsToPlantSpecificationsPipe;
 
-    public LogisticsRunnable(Pipe<Specification> clientPipe, Pipe<Specification> plantPipe) {
-        this.clientPipe = clientPipe;
-        this.plantPipe = plantPipe;
+    public LogisticsRunnable(Pipe<Specification> clientToLogisticsSpecificationsPipe, Pipe<Specification> logisticsToPlantSpecificationsPipe) {
+        this.clientToLogisticsSpecificationsPipe = clientToLogisticsSpecificationsPipe;
+        this.logisticsToPlantSpecificationsPipe = logisticsToPlantSpecificationsPipe;
     }
 
     @Override
@@ -26,10 +26,10 @@ public class LogisticsRunnable implements Runnable {
 
             try {
                 // Un client demande un produit
-                Specification spec = clientPipe.read();
+                Specification spec = clientToLogisticsSpecificationsPipe.read();
 
                 // Envoi de la spec pour chaque fournisseur
-                plantPipe.writeForEach(Database.getInstance().getWorld(), PlantRunnable.class, spec);
+                logisticsToPlantSpecificationsPipe.writeForEach(Database.getInstance().getWorld(), PlantRunnable.class, spec);
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
