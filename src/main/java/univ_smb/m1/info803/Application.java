@@ -2,45 +2,59 @@ package univ_smb.m1.info803;
 
 import univ_smb.m1.info803.model.Specification;
 import univ_smb.m1.info803.runnable.*;
+import univ_smb.m1.info803.ui.Home;
 import univ_smb.m1.info803.util.Pipe;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Application {
+    // La base de données de l'ensemble du programme
+    private Database db;
 
-    public Application() throws IOException, InterruptedException {
-        init();
-    }
+    // Liste des threads et runnables exécutés
+    private List<Thread> threads;
+    private List<Runnable> runnables;
 
-    public void init() throws IOException, InterruptedException {
-        // La base de données de l'ensemble du programme
-        Database db = Database.getInstance();
+    // Pipes (pour la communication entre le client et les threads)
+    private Pipe<Specification> clientToLogisticsSpecificationsPipe;
+    private Pipe<Specification> plantToClientSpecificationsPipe;
 
-        // Liste des threads
-        List<Thread> threads = new ArrayList<>();
+    // Listeners
+    private List<ApplicationListener> listeners;
 
-        // Création des pipes (pour la communication entre threads)
-        Pipe<Specification> clientToLogisticsSpecificationsPipe = new Pipe<>();
-        Pipe<Specification> logisticsToPlantSpecificationsPipe = new Pipe<>();
+    private Application() throws IOException {
+        this.db = Database.getInstance();
+
+        this.threads = new ArrayList<>();
+        this.runnables = new ArrayList<>();
+        this.listeners = new ArrayList<>();
+
+        this.clientToLogisticsSpecificationsPipe = new Pipe<>();
+        this.plantToClientSpecificationsPipe = new Pipe<>();
 
         // Création des runnables
-        List<Runnable> runnables = new ArrayList<>();
-        runnables.add(new LogisticsRunnable(clientToLogisticsSpecificationsPipe, logisticsToPlantSpecificationsPipe));
+        Pipe<Specification> logisticsToPlantSpecificationsPipe = new Pipe<>();
 
-        runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe));
-        runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe));
+        this.runnables.add(new LogisticsRunnable(clientToLogisticsSpecificationsPipe, logisticsToPlantSpecificationsPipe));
 
-        runnables.add(new RetailerRunnable());
-        runnables.add(new SupplierRunnable());
-        runnables.add(new TransporterRunnable());
-        runnables.add(new WarehouseRunnable());
+        this.runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
+        this.runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
+
+        this.runnables.add(new RetailerRunnable());
+        this.runnables.add(new SupplierRunnable());
+        this.runnables.add(new TransporterRunnable());
+        this.runnables.add(new WarehouseRunnable());
 
         // Le 'monde' correspond à l'ensemble des entités (entreprises, transporteurs...) qui communiquent ensemble
         // Dans ce programme il s'agit des runnables (threads)
-        db.setWorld(runnables);
+        this.db.setWorld(runnables);
+    }
+
+    private void run() throws IOException {
 
         // Démarrage des runnables
         // Création des threads et stockage de leur référence
@@ -50,22 +64,74 @@ public class Application {
             threads.add(th);
         }
 
-        // Ajout d'un cahier des charges en database
-        // La database va lui donner un identifiant unique
-        db.addSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
+        // Le client envoie un cahier des charges à traiter
+        sendSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
 
-        // Envoi du cahier des charge au logistics runnable
-        clientToLogisticsSpecificationsPipe.write(db.getSpecification(1));
+        // Traitements effectués par le client...
+        while(true) {
+            try {
+                Specification spec = plantToClientSpecificationsPipe.read();
+                System.err.println(spec);
+
+                // On indique aux listeners qu'un cahier des charge a été traité
+                for(ApplicationListener listener : listeners) {
+                    listener.specificationProcessed(spec);
+                }
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
 
         // Arrêt/Attente des threads
+        /*
         for(Thread th : threads) {
             // th.interrupt();
             th.join();
         }
+        */
     }
 
-    public static void main(String args[]) throws IOException, InterruptedException {
-        new Application();
+    public void sendSpecification(Specification spec) throws IOException {
+        // Ajout du cahier des charges en database
+        // La database va lui donner un identifiant unique
+        Specification newSpec = db.addSpecification(spec);
+
+        // Envoi du cahier des charge au logistics runnable
+        clientToLogisticsSpecificationsPipe.write(newSpec);
+    }
+
+    public void addApplicationListener(ApplicationListener listener) {
+        listeners.add(listener);
+    }
+
+    public static void main(String args[]) throws IOException {
+        final Application app = new Application();
+
+        Thread gui = new Thread(() -> {
+
+            // TODO : passer l'application (app) à l'interface Home pour gérer les événements
+
+            JFrame frame = new JFrame("Supply Chain Management");
+            frame.setContentPane(new Home().getWindow());
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+        });
+
+        // Event test
+        /*
+        app.addApplicationListener(new ApplicationListener() {
+            @Override
+            public void specificationProcessed(Specification spec) {
+                System.err.println("SPEC PROCESSED");
+            }
+        });
+        */
+
+        // Démarrage de l'application et de l'interface graphique
+        gui.start();
+        app.run();
     }
 
 }

@@ -14,14 +14,17 @@ public class PlantRunnable implements Runnable {
     private Pipe<Specification> plantToDesignSpecificationsPipe;
     private Pipe<Specification> plantToWorkshopSpecificationsPipe;
     private Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe;
+    private Pipe<Specification> plantToClientSpecificationsPipe;
 
     private List<Specification> specificationsProcessed;
 
     private Thread workshop;
     private Thread design;
 
-    public PlantRunnable(Pipe<Specification> logisticsToPlantSpecificationsPipe) throws IOException {
+    public PlantRunnable(Pipe<Specification> logisticsToPlantSpecificationsPipe, Pipe<Specification> plantToClientSpecificationsPipe) throws IOException {
         this.logisticsToPlantSpecificationsPipe = logisticsToPlantSpecificationsPipe;
+        this.plantToClientSpecificationsPipe = plantToClientSpecificationsPipe;
+
         this.specificationsProcessed = new ArrayList<>();
 
         this.plantToDesignSpecificationsPipe = new Pipe<>();
@@ -77,7 +80,9 @@ public class PlantRunnable implements Runnable {
 
                         if(spec.getAlterations().size() == 2) {
                             System.out.println("Les ateliers ont fait leur travail, on envoie le résultat au client");
+                            plantToClientSpecificationsPipe.write(spec);
                         }
+
                     } else {
                         throw new NullPointerException();
                     }

@@ -32,12 +32,7 @@ public class Home {
     private JButton FLEYButton;
     private JTextField textField8;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Supply Chain Management");
-        frame.setContentPane(new Home().window);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+    public JPanel getWindow() {
+        return window;
     }
-
 }
