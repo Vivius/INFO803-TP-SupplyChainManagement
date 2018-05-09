@@ -30,12 +30,7 @@ public class Home {
     private JPanel proposition2;
     private JPanel proposition3;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Supply Chain Management");
-        frame.setContentPane(new Home().window);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
+    public JPanel getWindow() {
+        return window;
     }
-
 }
