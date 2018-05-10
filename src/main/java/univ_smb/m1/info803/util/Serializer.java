@@ -16,12 +16,10 @@ public class Serializer<T> {
     public T deserialize(String byteString) throws IOException, ClassNotFoundException {
         final byte[] bytes = Base64.getDecoder().decode(byteString);
         try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes); ObjectInput in = new ObjectInputStream(bis)) {
-            try {
-                return (T) in.readObject();
-            } catch (ClassCastException ex) {
-                ex.printStackTrace();
-                return null;
-            }
+            return (T) in.readObject();
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+            return null;
         }
     }
 }
