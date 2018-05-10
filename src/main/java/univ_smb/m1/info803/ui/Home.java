@@ -1,8 +1,14 @@
 package univ_smb.m1.info803.ui;
 
+import univ_smb.m1.info803.Application;
+import univ_smb.m1.info803.ApplicationListener;
+import univ_smb.m1.info803.model.Specification;
+
 import javax.swing.*;
 
-public class Home {
+public class Home implements ApplicationListener {
+    private final Application app;
+
     private JPanel window;
     private JButton validerButton;
     private JTextField textField1;
@@ -32,5 +38,16 @@ public class Home {
 
     public JPanel getWindow() {
         return window;
+    }
+
+    public Home(Application app) {
+        this.app = app;
+        app.addApplicationListener(this);
+    }
+
+    @Override
+    public void specificationProcessed(Specification spec) {
+        System.err.println("Cahier des charges traité");
+        System.err.println(spec);
     }
 }

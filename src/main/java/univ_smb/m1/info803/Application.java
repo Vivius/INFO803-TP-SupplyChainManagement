@@ -71,7 +71,6 @@ public class Application {
         while(true) {
             try {
                 Specification spec = plantToClientSpecificationsPipe.read();
-                System.err.println(spec);
 
                 // On indique aux listeners qu'un cahier des charge a été traité
                 for(ApplicationListener listener : listeners) {
@@ -110,24 +109,13 @@ public class Application {
 
         Thread gui = new Thread(() -> {
 
-            // TODO : passer l'application (app) à l'interface Home pour gérer les événements
-
             JFrame frame = new JFrame("Supply Chain Management");
-            frame.setContentPane(new Home().getWindow());
+            frame.setContentPane(new Home(app).getWindow());
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);
-        });
 
-        // Event test
-        /*
-        app.addApplicationListener(new ApplicationListener() {
-            @Override
-            public void specificationProcessed(Specification spec) {
-                System.err.println("SPEC PROCESSED");
-            }
         });
-        */
 
         // Démarrage de l'application et de l'interface graphique
         gui.start();
