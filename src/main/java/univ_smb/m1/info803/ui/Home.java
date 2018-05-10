@@ -13,10 +13,7 @@ public class Home {
     private JButton INTELButton;
     private JButton NVIDIAButton;
     private JButton AMDButton;
-    private JPanel proposition;
-    private JTextField textField5;
-    private JTextField textField6;
-    private JTextField textField7;
+    private JPanel proposition1;
     private JButton accepterButton;
     private JButton refuserButton;
     private JPanel ca;
@@ -30,7 +27,8 @@ public class Home {
     private JButton EMBALEXButton;
     private JButton LESUButton;
     private JButton FLEYButton;
-    private JTextField textField8;
+    private JPanel proposition2;
+    private JPanel proposition3;
 
     public JPanel getWindow() {
         return window;
