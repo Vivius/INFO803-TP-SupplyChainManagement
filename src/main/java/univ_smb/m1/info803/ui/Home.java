@@ -7,6 +7,7 @@ import univ_smb.m1.info803.model.Specification;
 import javax.swing.*;
 
 public class Home implements ApplicationListener {
+
     private final Application app;
 
     private JPanel window;
@@ -36,6 +37,14 @@ public class Home implements ApplicationListener {
     private JPanel proposition2;
     private JPanel proposition3;
 
+    private void init(){
+        appel2.setVisible(false);
+        appel3.setVisible(false);
+        proposition1.setVisible(false);
+        proposition2.setVisible(false);
+        proposition3.setVisible(false);
+    }
+
     public JPanel getWindow() {
         return window;
     }
@@ -43,6 +52,7 @@ public class Home implements ApplicationListener {
     public Home(Application app) {
         this.app = app;
         app.addApplicationListener(this);
+        init();
     }
 
     @Override
