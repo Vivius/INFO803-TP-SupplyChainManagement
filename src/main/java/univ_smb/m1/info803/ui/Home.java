@@ -73,7 +73,7 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     private JButton refuserP2Button;
     private JButton accepterP3Button;
     private JButton refuserP3Button;
-    private ArrayList<Specification> specifications = new ArrayList<Specification>();
+    private ArrayList<Specification> specifications = new ArrayList<>();
     private String currentP1View = "";
     private String currentP2View = "";
     private String currentP3View = "";
@@ -154,7 +154,7 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
 
     }
 
-    public Home() throws IOException {
+    private Home() throws IOException {
         init();
         this.app = new Application();
         app.addApplicationListener(this);
