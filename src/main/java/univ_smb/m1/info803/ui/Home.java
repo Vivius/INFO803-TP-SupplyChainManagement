@@ -158,21 +158,28 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
 
             for (Specification specs : specifications) {
                 if(source == INTELButton && specs.getCompany().equals("INTEL")){
-                    requirementsP.setText(specs.getRequirements().toString());
-                    costP.setText(specs.getCost()+"");
-                    timeP.setText(specs.getTime()+"");
+                    INTELButton.setBackground(Color.GRAY);
+                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
                 }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
-                    requirementsP.setText(specs.getRequirements().toString());
-                    costP.setText(specs.getCost()+"");
-                    timeP.setText(specs.getTime()+"");
-                }else{
-                    requirementsP.setText(specs.getRequirements().toString());
-                    costP.setText(specs.getCost()+"");
-                    timeP.setText(specs.getTime()+"");
+                    INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    NVIDIAButton.setBackground(Color.GRAY);
+                    AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
+                }else if(source == AMDButton && specs.getCompany().equals("AMD")){
+                    INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    AMDButton.setBackground(Color.GRAY);
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
                 }
             }
-
-
             costP.setVisible(true);
             requirementsP.setVisible(true);
             timeP.setVisible(true);
@@ -181,7 +188,6 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             labelRP.setVisible(true);
             accepterP1Button.setVisible(true);
             refuserP1Button.setVisible(true);
-
         } else if(source == accepterP1Button) {
 
         } else if(source == refuserP1Button) {
