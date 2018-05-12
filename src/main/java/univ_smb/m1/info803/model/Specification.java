@@ -60,6 +60,7 @@ public class Specification implements Serializable {
     }
 
     public void upgradeVersion() {
+        alterations.clear();
         version++;
     }
 
@@ -69,6 +70,34 @@ public class Specification implements Serializable {
 
     public List<SpecificationAlteration> getAlterations() {
         return alterations;
+    }
+
+    public List<String> getAllRequirements() {
+        List<String> result = new ArrayList<>(requirements);
+        for(SpecificationAlteration alt : alterations) {
+            result.addAll(alt.getRequirements());
+        }
+        return result;
+    }
+
+    public double getLastCost() {
+        double lastCost = cost;
+        for(SpecificationAlteration alt : alterations) {
+            if(alt.getCost() > 0) {
+                lastCost = alt.getCost();
+            }
+        }
+        return lastCost;
+    }
+
+    public int getLastTime() {
+        int lastTime = time;
+        for(SpecificationAlteration alt : alterations) {
+            if(alt.getTime() > 0) {
+                lastTime = alt.getTime();
+            }
+        }
+        return lastTime;
     }
 
     @Override
