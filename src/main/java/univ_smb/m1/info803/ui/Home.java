@@ -58,6 +58,7 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     private JLabel labelCP;
     private JLabel labelTP;
     private ArrayList<Specification> specifications = new ArrayList<Specification>();
+    private String currentP1View = "";
 
     private void init(){
         appel2.setVisible(false);
@@ -90,7 +91,8 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         INTELButton.addActionListener(this);
         NVIDIAButton.addActionListener(this);
         AMDButton.addActionListener(this);
-
+        accepterP1Button.addActionListener(this);
+        refuserP1Button.addActionListener(this);
     }
 
     public Home() throws IOException {
@@ -105,7 +107,6 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     public void specificationProcessed(Specification spec) {
         System.err.println("Cahier des charges traité");
         specifications.add(spec);
-        System.err.println(specifications);
 
         if(spec.getCompany().equals("NVIDIA")){
             INTELButton.setVisible(true);
@@ -157,25 +158,39 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
                 e1.printStackTrace();
             }
         } else if(source == INTELButton || source == NVIDIAButton || source == AMDButton) {
-
             for (Specification specs : specifications) {
                 if(source == INTELButton && specs.getCompany().equals("INTEL")){
+                    currentP1View = "INTEL";
+                    if(AMDButton.isEnabled()) {
+                        AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    }
+                    if(NVIDIAButton.isEnabled()) {
+                        NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    }
                     INTELButton.setBackground(Color.GRAY);
-                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
-                    AMDButton.setBackground(Color.decode("#EBEBEB"));
                     requirementsP.setText(specs.getAllRequirements().toString());
                     costP.setText(String.valueOf(round(specs.getLastCost(),2)));
                     timeP.setText(String.valueOf(specs.getLastTime()));
                 }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
-                    INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    currentP1View = "NVIDIA";
+                    if(INTELButton.isEnabled()) {
+                        INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    }
+                    if(AMDButton.isEnabled()) {
+                        AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    }
                     NVIDIAButton.setBackground(Color.GRAY);
-                    AMDButton.setBackground(Color.decode("#EBEBEB"));
                     requirementsP.setText(specs.getAllRequirements().toString());
                     costP.setText(String.valueOf(round(specs.getLastCost(),2)));
                     timeP.setText(String.valueOf(specs.getLastTime()));
                 }else if(source == AMDButton && specs.getCompany().equals("AMD")){
-                    INTELButton.setBackground(Color.decode("#EBEBEB"));
-                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    currentP1View = "AMD";
+                    if(INTELButton.isEnabled()) {
+                        INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    }
+                    if(NVIDIAButton.isEnabled()) {
+                        NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    }
                     AMDButton.setBackground(Color.GRAY);
                     requirementsP.setText(specs.getAllRequirements().toString());
                     costP.setText(String.valueOf(round(specs.getLastCost(),2)));
@@ -191,9 +206,35 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             accepterP1Button.setVisible(true);
             refuserP1Button.setVisible(true);
         } else if(source == accepterP1Button) {
+            INTELButton.setEnabled(false);
+            NVIDIAButton.setEnabled(false);
+            AMDButton.setEnabled(false);
+            proposition1.setEnabled(false);
+            accepterP1Button.setVisible(false);
+            refuserP1Button.setVisible(false);
 
+            if(currentP1View.equals("NVIDIA")){
+                NVIDIAButton.setBackground(Color.decode("#1F6617"));
+            }else if(currentP1View.equals("AMD")){
+                AMDButton.setBackground(Color.decode("#1F6617"));
+            }else if(currentP1View.equals("INTEL")){
+                INTELButton.setBackground(Color.decode("#1F6617"));
+            }
+            appel2.setVisible(true);
         } else if(source == refuserP1Button) {
 
+            if(currentP1View.equals("NVIDIA")){
+                NVIDIAButton.setEnabled(false);
+                NVIDIAButton.setBackground(Color.decode("#940900"));
+            }else if(currentP1View.equals("AMD")){
+                AMDButton.setEnabled(false);
+                AMDButton.setBackground(Color.decode("#940900"));
+            }else if(currentP1View.equals("INTEL")){
+                INTELButton.setEnabled(false);
+                INTELButton.setBackground(Color.decode("#940900"));
+            }
+            accepterP1Button.setVisible(false);
+            refuserP1Button.setVisible(false);
         }
     }
 
@@ -244,7 +285,7 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         }
     }
 
-    public static double round(double value, int places) {
+    private static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
         BigDecimal bd = new BigDecimal(value);
