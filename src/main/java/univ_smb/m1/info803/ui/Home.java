@@ -84,7 +84,6 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         frame.pack();
         frame.setVisible(true);
     }
-}
 
     @Override
     public void actionPerformed(ActionEvent e) {
