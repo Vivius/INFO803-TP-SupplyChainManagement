@@ -4,6 +4,7 @@ import univ_smb.m1.info803.Database;
 import univ_smb.m1.info803.model.Specification;
 import univ_smb.m1.info803.util.Pipe;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 public class LogisticsRunnable implements Runnable {
@@ -29,9 +30,14 @@ public class LogisticsRunnable implements Runnable {
                 Specification spec = clientToLogisticsSpecificationsPipe.read();
 
                 // Envoi de la spec pour chaque fournisseur
-                logisticsToPlantSpecificationsPipe.writeForEach(Database.getInstance().getWorld(), PlantRunnable.class, spec);
+                for(Runnable run : Database.getInstance().getWorld()) {
+                    if(run.getClass().equals(PlantRunnable.class)) {
+                        logisticsToPlantSpecificationsPipe.write(spec);
+                        Thread.sleep(100);
+                    }
+                }
 
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 e.printStackTrace();
             }
 
