@@ -24,14 +24,6 @@ public class Pipe<T> {
         writer.flush();
     }
 
-    public void writeForEach(List<Runnable> runnables, Class targetRunnable, T object) throws IOException {
-        for(Runnable run : runnables) {
-            if(run.getClass().equals(targetRunnable)) {
-                write(object);
-            }
-        }
-    }
-
     public T read() throws IOException, ClassNotFoundException {
         String result = buffer.readLine();
         return serializer.deserialize(result);

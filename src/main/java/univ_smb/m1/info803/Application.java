@@ -2,13 +2,10 @@ package univ_smb.m1.info803;
 
 import univ_smb.m1.info803.model.Specification;
 import univ_smb.m1.info803.runnable.*;
-import univ_smb.m1.info803.ui.Home;
 import univ_smb.m1.info803.util.Pipe;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Application implements Runnable {

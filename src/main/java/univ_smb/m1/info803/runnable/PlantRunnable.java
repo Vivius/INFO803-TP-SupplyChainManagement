@@ -70,7 +70,6 @@ public class PlantRunnable implements Runnable {
                         // Envoi du cahier des charges à l'atelier de prototypage et à l'atelier d'étude
                         plantToDesignSpecificationsPipe.write(spec);
                         plantToWorkshopSpecificationsPipe.write(spec);
-
                     } else {
                         // On renvoie la spec si elle ne nous est pas destinée
                         logisticsToPlantSpecificationsPipe.write(spec);
