@@ -66,14 +66,6 @@ public class Application implements Runnable {
             threads.add(th);
         }
 
-        // TEST
-        // Le client envoie un cahier des charges à traiter
-        try {
-            sendSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         // Traitements effectués par le client...
         while(true) {
             try {
