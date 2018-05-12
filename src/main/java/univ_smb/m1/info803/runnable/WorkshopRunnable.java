@@ -31,7 +31,7 @@ public class WorkshopRunnable implements Runnable {
                 // System.out.println("Workshop " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
                 // System.out.println(spec);
 
-                double randCost = ThreadLocalRandom.current().nextInt(100, 10000);
+                double randCost = ThreadLocalRandom.current().nextDouble(100, 10000);
                 int randTime = ThreadLocalRandom.current().nextInt(10, 200);
 
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, new ArrayList<>(), randCost, randTime);
