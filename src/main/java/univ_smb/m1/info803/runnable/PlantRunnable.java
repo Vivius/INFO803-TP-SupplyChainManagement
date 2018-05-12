@@ -10,29 +10,37 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class PlantRunnable implements Runnable {
+    private String companyName;
+
     private Pipe<Specification> logisticsToPlantSpecificationsPipe;
     private Pipe<Specification> plantToDesignSpecificationsPipe;
     private Pipe<Specification> plantToWorkshopSpecificationsPipe;
-    private Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe;
+    private Pipe<SpecificationAlteration> workshopToPLantAlterationsPipe;
+    private Pipe<SpecificationAlteration> designToPlantAlterationsPipe;
     private Pipe<Specification> plantToClientSpecificationsPipe;
 
     private List<Specification> specificationsProcessed;
+    private List<SpecificationAlteration> alterations;
 
     private Thread workshop;
     private Thread design;
 
-    public PlantRunnable(Pipe<Specification> logisticsToPlantSpecificationsPipe, Pipe<Specification> plantToClientSpecificationsPipe) throws IOException {
+    public PlantRunnable(String companyName, Pipe<Specification> logisticsToPlantSpecificationsPipe, Pipe<Specification> plantToClientSpecificationsPipe) throws IOException {
+        this.companyName = companyName;
+
         this.logisticsToPlantSpecificationsPipe = logisticsToPlantSpecificationsPipe;
         this.plantToClientSpecificationsPipe = plantToClientSpecificationsPipe;
 
         this.specificationsProcessed = new ArrayList<>();
+        this.alterations = new ArrayList<>();
 
         this.plantToDesignSpecificationsPipe = new Pipe<>();
         this.plantToWorkshopSpecificationsPipe = new Pipe<>();
-        this.departmentsToPlantAlterationsPipe = new Pipe<>();
+        this.workshopToPLantAlterationsPipe = new Pipe<>();
+        this.designToPlantAlterationsPipe = new Pipe<>();
 
-        this.workshop = new Thread(new WorkshopRunnable(plantToWorkshopSpecificationsPipe, departmentsToPlantAlterationsPipe));
-        this.design = new Thread(new DesignRunnable(plantToDesignSpecificationsPipe, departmentsToPlantAlterationsPipe));
+        this.workshop = new Thread(new WorkshopRunnable(plantToWorkshopSpecificationsPipe, workshopToPLantAlterationsPipe));
+        this.design = new Thread(new DesignRunnable(plantToDesignSpecificationsPipe, designToPlantAlterationsPipe));
 
         this.workshop.start();
         this.design.start();
@@ -49,15 +57,15 @@ public class PlantRunnable implements Runnable {
 
             try {
 
+                // On traite les cahier des charges venant de la logisitique
                 if(logisticsToPlantSpecificationsPipe.ready()) {
                     Specification spec = logisticsToPlantSpecificationsPipe.read();
 
                     if(shouldProcessSpecification(spec)) {
+                        spec.setCompany(companyName);
                         specificationsProcessed.add(spec);
-                        System.out.println("Plant " + Thread.currentThread().getId() + " : Réception d'une cahier des charges");
-                        System.out.println(spec);
-
-                        Thread.sleep(1000);
+                        // System.out.println("Plant " + Thread.currentThread().getId() + " : Réception d'une cahier des charges");
+                        // System.out.println(spec);
 
                         // Envoi du cahier des charges à l'atelier de prototypage et à l'atelier d'étude
                         plantToDesignSpecificationsPipe.write(spec);
@@ -66,29 +74,39 @@ public class PlantRunnable implements Runnable {
                     } else {
                         // On renvoie la spec si elle ne nous est pas destinée
                         logisticsToPlantSpecificationsPipe.write(spec);
+                        Thread.yield();
                     }
                 }
 
-                if(departmentsToPlantAlterationsPipe.ready()) {
-                    SpecificationAlteration alteration = departmentsToPlantAlterationsPipe.read();
-                    System.out.println("Plant " + Thread.currentThread().getId() + " : Réception d'une contre proposition");
-                    System.out.println(alteration);
+                // On récupère une altération venant d'un ateler Workshop si possible
+                if(workshopToPLantAlterationsPipe.ready()) {
+                    alterations.add(workshopToPLantAlterationsPipe.read());
+                }
 
-                    Specification spec = findProcessedSpecification(alteration.getSpecificationId());
-                    if(spec != null) {
-                        spec.addAlteration(alteration);
+                // On récupère une altération venant d'un ateler Design si possible
+                if(designToPlantAlterationsPipe.ready()) {
+                    alterations.add(designToPlantAlterationsPipe.read());
+                }
 
-                        if(spec.getAlterations().size() == 2) {
-                            System.out.println("Les ateliers ont fait leur travail, on envoie le résultat au client");
-                            plantToClientSpecificationsPipe.write(spec);
+                // On traite les éventuelles alterations reçues pour tous les cahier des charges en cours de traitement.
+                if(alterations.size() > 0) {
+                    for(SpecificationAlteration alt : alterations) {
+                        Specification spec = findProcessedSpecification(alt.getSpecificationId());
+                        if(spec != null) {
+                            spec.addAlteration(alt);
+
+                            if(spec.getAlterations().size() > 0 && spec.getAlterations().size() % 2 == 0) {
+                                plantToClientSpecificationsPipe.write(spec);
+                            }
+
+                        } else {
+                            throw new NullPointerException();
                         }
-
-                    } else {
-                        throw new NullPointerException();
                     }
+                    alterations.clear();
                 }
 
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
                 break;

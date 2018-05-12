@@ -6,15 +6,14 @@ import univ_smb.m1.info803.util.Pipe;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class WorkshopRunnable implements Runnable {
     private Pipe<Specification> plantToWorkshopSpecificationsPipe;
-    private Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe;
+    private Pipe<SpecificationAlteration> workshopToPlantSpecificationsPipe;
 
-    public WorkshopRunnable(Pipe<Specification> plantToWorkshopSpecificationsPipe, Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe) {
+    public WorkshopRunnable(Pipe<Specification> plantToWorkshopSpecificationsPipe, Pipe<SpecificationAlteration> workshopToPlantSpecificationsPipe) {
         this.plantToWorkshopSpecificationsPipe = plantToWorkshopSpecificationsPipe;
-        this.departmentsToPlantAlterationsPipe = departmentsToPlantAlterationsPipe;
+        this.workshopToPlantSpecificationsPipe = workshopToPlantSpecificationsPipe;
     }
 
     @Override
@@ -28,12 +27,12 @@ public class WorkshopRunnable implements Runnable {
 
             try {
                 Specification spec = plantToWorkshopSpecificationsPipe.read();
-                System.out.println("Workshop " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
-                System.out.println(spec);
+                // System.out.println("Workshop " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
+                // System.out.println(spec);
 
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, new ArrayList<>(), 1000, 999);
 
-                departmentsToPlantAlterationsPipe.write(alteration);
+                workshopToPlantSpecificationsPipe.write(alteration);
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

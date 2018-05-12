@@ -10,11 +10,11 @@ import java.util.List;
 
 public class DesignRunnable implements Runnable {
     private Pipe<Specification> plantToDesignSpecificationsPipe;
-    private Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe;
+    private Pipe<SpecificationAlteration> designToPlantSpecificationsPipe;
 
-    public DesignRunnable(Pipe<Specification> plantToDesignSpecificationsPipe, Pipe<SpecificationAlteration> departmentsToPlantAlterationsPipe) {
+    public DesignRunnable(Pipe<Specification> plantToDesignSpecificationsPipe, Pipe<SpecificationAlteration> designToPlantSpecificationsPipe) {
         this.plantToDesignSpecificationsPipe = plantToDesignSpecificationsPipe;
-        this.departmentsToPlantAlterationsPipe = departmentsToPlantAlterationsPipe;
+        this.designToPlantSpecificationsPipe = designToPlantSpecificationsPipe;
     }
 
     @Override
@@ -28,14 +28,14 @@ public class DesignRunnable implements Runnable {
 
             try {
                 Specification spec = plantToDesignSpecificationsPipe.read();
-                System.out.println("Design " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
-                System.out.println(spec);
+                // System.out.println("Design " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
+                // System.out.println(spec);
 
                 List<String> newRequirements = new ArrayList<>();
                 newRequirements.add("make a test");
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, newRequirements);
 
-                departmentsToPlantAlterationsPipe.write(alteration);
+                designToPlantSpecificationsPipe.write(alteration);
 
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();

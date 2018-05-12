@@ -1,4 +1,5 @@
 package univ_smb.m1.info803.ui;
+
 import univ_smb.m1.info803.Application;
 import univ_smb.m1.info803.ApplicationListener;
 import univ_smb.m1.info803.model.Specification;
@@ -9,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 
 public class Home extends JFrame implements ActionListener,ApplicationListener {
 
@@ -60,15 +63,12 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         envoyerButton.addActionListener(this);
     }
 
-    public JPanel getWindow() {
-        return window;
-    }
-
-    public Home(Application app) {
-        window.setPreferredSize(new Dimension(1000,800));
-        this.app = app;
-        app.addApplicationListener(this);
+    public Home() throws IOException {
         init();
+        window.setPreferredSize(new Dimension(1000,800));
+        this.app = new Application();
+        app.addApplicationListener(this);
+        new Thread(app).start();
     }
 
     @Override
@@ -76,6 +76,15 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         System.err.println("Cahier des charges traité");
         System.err.println(spec);
     }
+
+    public static void main(String args[]) throws IOException {
+        JFrame frame = new JFrame("Supply Chain Management");
+        frame.setContentPane(new Home().window);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
+}
 
     @Override
     public void actionPerformed(ActionEvent e) {

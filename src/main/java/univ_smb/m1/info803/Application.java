@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Application {
-    // La base de données de l'ensemble du programme
+public class Application implements Runnable {
+    // Contient certains données globales
     private Database db;
 
     // Liste des threads et runnables exécutés
@@ -26,7 +26,7 @@ public class Application {
     // Listeners
     private List<ApplicationListener> listeners;
 
-    private Application() throws IOException {
+    public Application() throws IOException {
         this.db = Database.getInstance();
 
         this.threads = new ArrayList<>();
@@ -41,8 +41,9 @@ public class Application {
 
         this.runnables.add(new LogisticsRunnable(clientToLogisticsSpecificationsPipe, logisticsToPlantSpecificationsPipe));
 
-        this.runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
-        this.runnables.add(new PlantRunnable(logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
+        this.runnables.add(new PlantRunnable("NVIDIA", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
+        this.runnables.add(new PlantRunnable("INTEL", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
+        this.runnables.add(new PlantRunnable("AMD", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
 
         this.runnables.add(new RetailerRunnable());
         this.runnables.add(new SupplierRunnable());
@@ -54,7 +55,8 @@ public class Application {
         this.db.setWorld(runnables);
     }
 
-    private void run() throws IOException {
+    @Override
+    public void run() {
 
         // Démarrage des runnables
         // Création des threads et stockage de leur référence
@@ -64,7 +66,13 @@ public class Application {
             threads.add(th);
         }
 
+        // TEST
         // Le client envoie un cahier des charges à traiter
+        try {
+            sendSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // Traitements effectués par le client...
         while(true) {
@@ -76,7 +84,7 @@ public class Application {
                     listener.specificationProcessed(spec);
                 }
 
-            } catch (ClassNotFoundException e) {
+            } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
             }
         }
@@ -91,34 +99,10 @@ public class Application {
     }
 
     public void sendSpecification(Specification spec) throws IOException {
-        // Ajout du cahier des charges en database
-        // La database va lui donner un identifiant unique
-        Specification newSpec = db.addSpecification(spec);
-
-        // Envoi du cahier des charge au logistics runnable
-        clientToLogisticsSpecificationsPipe.write(newSpec);
+        clientToLogisticsSpecificationsPipe.write(spec);
     }
 
     public void addApplicationListener(ApplicationListener listener) {
         listeners.add(listener);
     }
-
-    public static void main(String args[]) throws IOException {
-        final Application app = new Application();
-
-        Thread gui = new Thread(() -> {
-
-            JFrame frame = new JFrame("Supply Chain Management");
-            frame.setContentPane(new Home(app).getWindow());
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            frame.pack();
-            frame.setVisible(true);
-
-        });
-
-        // Démarrage de l'application et de l'interface graphique
-        gui.start();
-        app.run();
-    }
-
 }

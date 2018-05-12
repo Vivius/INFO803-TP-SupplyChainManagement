@@ -5,26 +5,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Specification implements Serializable {
+    private static int index = 1;
+
     private int id;
     private List<String> requirements;
     private double cost;
     private int time;
     private int quantity;
+    private String company;
+    private int version;
 
     private List<SpecificationAlteration> alterations;
 
     public Specification(List<String> requirements, double cost, int time, int quantity) {
-        this.id = 0;
+        this.id = index++;
         this.requirements = requirements;
         this.cost = cost;
         this.time = time;
         this.quantity = quantity;
         this.alterations = new ArrayList<>();
-    }
-
-    public Specification(int id, List<String> requirements, double cost, int time, int quantity) {
-        this(requirements, cost, time, quantity);
-        this.id = id;
+        this.version = 1;
     }
 
     public int getId() {
@@ -47,6 +47,22 @@ public class Specification implements Serializable {
         return quantity;
     }
 
+    public String getCompany() {
+        return company;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void upgradeVersion() {
+        version++;
+    }
+
     public void addAlteration(SpecificationAlteration alteration) {
         alterations.add(alteration);
     }
@@ -63,6 +79,8 @@ public class Specification implements Serializable {
                 ", cost=" + cost +
                 ", time=" + time +
                 ", quantity=" + quantity +
+                ", company='" + company + '\'' +
+                ", version=" + version +
                 ", alterations=" + alterations +
                 '}';
     }
