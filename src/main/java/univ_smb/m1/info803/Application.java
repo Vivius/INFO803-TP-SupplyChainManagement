@@ -65,7 +65,6 @@ public class Application {
         }
 
         // Le client envoie un cahier des charges à traiter
-        sendSpecification(new Specification(Arrays.asList("toto", "test"), 10, 20, 30));
 
         // Traitements effectués par le client...
         while(true) {

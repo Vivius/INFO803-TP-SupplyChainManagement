@@ -24,7 +24,7 @@
         </properties>
         <border type="none"/>
         <children>
-          <grid id="9df88" binding="ca" layout-manager="GridLayoutManager" row-count="9" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="9df88" binding="ca" layout-manager="GridLayoutManager" row-count="13" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="10" left="10" bottom="10" right="10"/>
             <constraints>
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -48,7 +48,7 @@
                   <text value="Caractéristique techniques (requirements)"/>
                 </properties>
               </component>
-              <component id="26d30" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+              <component id="26d30" class="javax.swing.JTextField" binding="requirements">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -60,7 +60,7 @@
               </component>
               <component id="31078" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <font name="Ubuntu" size="14" style="0"/>
@@ -68,9 +68,9 @@
                   <text value="Coût (cost)"/>
                 </properties>
               </component>
-              <component id="e3652" class="javax.swing.JTextField" binding="textField2" default-binding="true">
+              <component id="e3652" class="javax.swing.JTextField" binding="cost">
                 <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
@@ -80,7 +80,7 @@
               </component>
               <component id="1efff" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <font name="Ubuntu" size="14" style="0"/>
@@ -88,27 +88,7 @@
                   <text value="Délai (time)"/>
                 </properties>
               </component>
-              <component id="f71fe" class="javax.swing.JTextField" binding="textField3" default-binding="true">
-                <constraints>
-                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                    <preferred-size width="150" height="-1"/>
-                  </grid>
-                </constraints>
-                <properties>
-                  <background color="-1"/>
-                </properties>
-              </component>
-              <component id="8cd6d" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font name="Ubuntu" size="14" style="0"/>
-                  <foreground color="-16777216"/>
-                  <text value="Quantité (quantity)"/>
-                </properties>
-              </component>
-              <component id="a1364" class="javax.swing.JTextField" binding="textField4" default-binding="true">
+              <component id="f71fe" class="javax.swing.JTextField" binding="time">
                 <constraints>
                   <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -118,15 +98,73 @@
                   <background color="-1"/>
                 </properties>
               </component>
-              <component id="da0af" class="javax.swing.JButton" binding="validerButton" default-binding="true">
+              <component id="8cd6d" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="9" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <font name="Ubuntu" size="14" style="0"/>
+                  <foreground color="-16777216"/>
+                  <text value="Quantité (quantity)"/>
+                </properties>
+              </component>
+              <component id="a1364" class="javax.swing.JTextField" binding="quantity">
+                <constraints>
+                  <grid row="10" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <background color="-1"/>
+                </properties>
+              </component>
+              <component id="da0af" class="javax.swing.JButton" binding="validerButton" default-binding="true">
+                <constraints>
+                  <grid row="12" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <background color="-1315861"/>
+                  <enabled value="true"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Valider"/>
+                </properties>
+              </component>
+              <component id="370e3" class="javax.swing.JLabel" binding="noRequirements">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <enabled value="true"/>
+                  <foreground color="-3406592"/>
+                  <text value="Veuillez remplir le champ (Liste séparée par des virgules)."/>
+                </properties>
+              </component>
+              <component id="9928a" class="javax.swing.JLabel" binding="noCost">
+                <constraints>
+                  <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <foreground color="-3406592"/>
+                  <text value="Veuillez remplir le champ (Entier)."/>
+                </properties>
+              </component>
+              <component id="315b7" class="javax.swing.JLabel" binding="noTime">
+                <constraints>
+                  <grid row="8" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <foreground color="-3406592"/>
+                  <text value="Veuillez remplir le champ (Entier)."/>
+                </properties>
+              </component>
+              <component id="2b63c" class="javax.swing.JLabel" binding="noQuantity">
+                <constraints>
+                  <grid row="11" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <foreground color="-3406592"/>
+                  <text value="Veuillez remplir le champ (Entier)."/>
                 </properties>
               </component>
             </children>
@@ -160,9 +198,9 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="NVIDIA"/>
                 </properties>
               </component>
@@ -173,9 +211,9 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="INTEL"/>
                 </properties>
               </component>
@@ -199,16 +237,16 @@
                   <text value="Délai (time)"/>
                 </properties>
               </component>
-              <component id="3ce0" class="javax.swing.JButton" binding="accepterButton" default-binding="true">
+              <component id="3ce0" class="javax.swing.JButton" binding="accepterP1Button">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="105" height="31"/>
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Accepter"/>
                 </properties>
               </component>
@@ -247,20 +285,20 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="AMD"/>
                 </properties>
               </component>
-              <component id="cea8a" class="javax.swing.JButton" binding="refuserButton" default-binding="true">
+              <component id="cea8a" class="javax.swing.JButton" binding="refuserP1Button">
                 <constraints>
                   <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Refuser"/>
                 </properties>
               </component>
@@ -292,7 +330,7 @@
               <color color="-16777216"/>
             </border>
             <children>
-              <component id="18e1b" class="javax.swing.JLabel">
+              <component id="18e1b" class="javax.swing.JLabel" binding="cdcText">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -309,9 +347,11 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
+                  <enabled value="false"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
+                  <hideActionText value="false"/>
                   <text value="Envoyer"/>
                 </properties>
               </component>
@@ -338,9 +378,9 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Envoyer"/>
                 </properties>
               </component>
@@ -367,9 +407,9 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Envoyer"/>
                 </properties>
               </component>
@@ -394,9 +434,9 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="EMBALEX"/>
                 </properties>
               </component>
@@ -405,9 +445,9 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="LESU"/>
                 </properties>
               </component>
@@ -416,9 +456,9 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="FLEY"/>
                 </properties>
               </component>
@@ -489,9 +529,9 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Accepter"/>
                 </properties>
               </component>
@@ -500,9 +540,9 @@
                   <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Refuser"/>
                 </properties>
               </component>
@@ -515,6 +555,7 @@
             </constraints>
             <properties>
               <background color="-1"/>
+              <enabled value="true"/>
             </properties>
             <border type="line" title="Proposition : 3ème appel" title-justification="2">
               <font size="20"/>
@@ -527,9 +568,9 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="DHL"/>
                 </properties>
               </component>
@@ -538,9 +579,9 @@
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="TNT"/>
                 </properties>
               </component>
@@ -549,9 +590,9 @@
                   <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="COLLISIMO"/>
                 </properties>
               </component>
@@ -582,9 +623,9 @@
                   </grid>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Accepter"/>
                 </properties>
               </component>
@@ -593,9 +634,9 @@
                   <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <background color="-7169894"/>
+                  <background color="-1315861"/>
                   <font name="Ubuntu" size="16" style="0"/>
-                  <foreground color="-1"/>
+                  <foreground color="-16777216"/>
                   <text value="Refuser"/>
                 </properties>
               </component>
