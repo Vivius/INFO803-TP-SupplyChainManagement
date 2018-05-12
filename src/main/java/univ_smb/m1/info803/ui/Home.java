@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 import java.awt.*;
@@ -48,19 +49,46 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     private JLabel noTime;
     private JLabel noQuantity;
     private JLabel cdcText;
+    private JLabel requirementsP;
+    private JLabel costP;
+    private JLabel timeP;
+    private JLabel labelRP;
+    private JLabel labelCP;
+    private JLabel labelTP;
+    private ArrayList<Specification> specifications = new ArrayList<Specification>();
 
     private void init(){
         appel2.setVisible(false);
         appel3.setVisible(false);
+
+        costP.setVisible(false);
+        requirementsP.setVisible(false);
+        timeP.setVisible(false);
+        labelCP.setVisible(false);
+        labelTP.setVisible(false);
+        labelRP.setVisible(false);
+        accepterP1Button.setVisible(false);
+        refuserP1Button.setVisible(false);
+
+        INTELButton.setVisible(false);
+        NVIDIAButton.setVisible(false);
+        AMDButton.setVisible(false);
+
         proposition1.setVisible(false);
         proposition2.setVisible(false);
         proposition3.setVisible(false);
+
         noRequirements.setVisible(false);
         noCost.setVisible(false);
         noTime.setVisible(false);
         noQuantity.setVisible(false);
+
         validerButton.addActionListener(this);
         envoyerButton.addActionListener(this);
+        INTELButton.addActionListener(this);
+        NVIDIAButton.addActionListener(this);
+        AMDButton.addActionListener(this);
+
     }
 
     public Home() throws IOException {
@@ -74,7 +102,16 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     @Override
     public void specificationProcessed(Specification spec) {
         System.err.println("Cahier des charges traité");
-        System.err.println(spec);
+        specifications.add(spec);
+        System.err.println(specifications);
+
+        if(spec.getCompany().equals("NVIDIA")){
+            INTELButton.setVisible(true);
+        }else if(spec.getCompany().equals("INTEL")){
+            NVIDIAButton.setVisible(true);
+        }else if(spec.getCompany().equals("AMD")){
+            AMDButton.setVisible(true);
+        }
     }
 
     public static void main(String args[]) throws IOException {
@@ -88,7 +125,6 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-
         if(source == validerButton){
             if(validateCDC()){
                 envoyerButton.setEnabled(true);
@@ -105,10 +141,10 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         } else if(source == envoyerButton){
             try {
                 app.sendSpecification(new Specification(
-                        Arrays.asList(requirements.getText().split("\\s*,\\s*")),
-                        Integer.parseInt(cost.getText()),
-                        Integer.parseInt(time.getText()),
-                        Integer.parseInt(quantity.getText())
+                    Arrays.asList(requirements.getText().split("\\s*,\\s*")),
+                    Integer.parseInt(cost.getText()),
+                    Integer.parseInt(time.getText()),
+                    Integer.parseInt(quantity.getText())
                 ));
                 appel1.setEnabled(false);
                 envoyerButton.setEnabled(false);
@@ -118,20 +154,43 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-        }else if(source == INTELButton) {
+        } else if(source == INTELButton || source == NVIDIAButton || source == AMDButton) {
 
+            for (Specification specs : specifications) {
+                if(source == INTELButton && specs.getCompany().equals("INTEL")){
+                    INTELButton.setBackground(Color.GRAY);
+                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
+                }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
+                    INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    NVIDIAButton.setBackground(Color.GRAY);
+                    AMDButton.setBackground(Color.decode("#EBEBEB"));
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
+                }else if(source == AMDButton && specs.getCompany().equals("AMD")){
+                    INTELButton.setBackground(Color.decode("#EBEBEB"));
+                    NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
+                    AMDButton.setBackground(Color.GRAY);
+                    requirementsP.setText(specs.getAllRequirements().toString());
+                    costP.setText(String.valueOf(specs.getLastCost()));
+                    timeP.setText(String.valueOf(specs.getLastTime()));
+                }
+            }
+            costP.setVisible(true);
+            requirementsP.setVisible(true);
+            timeP.setVisible(true);
+            labelCP.setVisible(true);
+            labelTP.setVisible(true);
+            labelRP.setVisible(true);
+            accepterP1Button.setVisible(true);
+            refuserP1Button.setVisible(true);
+        } else if(source == accepterP1Button) {
 
-        }else if(source == NVIDIAButton) {
-
-
-        }else if(source == AMDButton) {
-
-
-        }else if(source == accepterP1Button) {
-
-
-        }else if(source == refuserP1Button) {
-
+        } else if(source == refuserP1Button) {
 
         }
     }

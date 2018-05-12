@@ -183,7 +183,7 @@
               <color color="-16777216"/>
             </border>
             <children>
-              <component id="2405a" class="javax.swing.JLabel">
+              <component id="2405a" class="javax.swing.JLabel" binding="labelRP">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -217,7 +217,7 @@
                   <text value="INTEL"/>
                 </properties>
               </component>
-              <component id="6a19c" class="javax.swing.JLabel">
+              <component id="6a19c" class="javax.swing.JLabel" binding="labelCP">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -227,7 +227,7 @@
                   <text value="Coût (cost)"/>
                 </properties>
               </component>
-              <component id="7bc78" class="javax.swing.JLabel">
+              <component id="7bc78" class="javax.swing.JLabel" binding="labelTP">
                 <constraints>
                   <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -250,7 +250,7 @@
                   <text value="Accepter"/>
                 </properties>
               </component>
-              <component id="b8221" class="javax.swing.JLabel">
+              <component id="b8221" class="javax.swing.JLabel" binding="requirementsP">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -260,7 +260,7 @@
                   <text value="&lt;null&gt;"/>
                 </properties>
               </component>
-              <component id="77d56" class="javax.swing.JLabel">
+              <component id="77d56" class="javax.swing.JLabel" binding="costP">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -270,7 +270,7 @@
                   <text value="&lt;null&gt;"/>
                 </properties>
               </component>
-              <component id="fe214" class="javax.swing.JLabel">
+              <component id="fe214" class="javax.swing.JLabel" binding="timeP">
                 <constraints>
                   <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
