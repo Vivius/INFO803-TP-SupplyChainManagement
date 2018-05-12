@@ -8,6 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
@@ -162,21 +164,21 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                     AMDButton.setBackground(Color.decode("#EBEBEB"));
                     requirementsP.setText(specs.getAllRequirements().toString());
-                    costP.setText(String.valueOf(specs.getLastCost()));
+                    costP.setText(String.valueOf(round(specs.getLastCost(),2)));
                     timeP.setText(String.valueOf(specs.getLastTime()));
                 }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
                     INTELButton.setBackground(Color.decode("#EBEBEB"));
                     NVIDIAButton.setBackground(Color.GRAY);
                     AMDButton.setBackground(Color.decode("#EBEBEB"));
                     requirementsP.setText(specs.getAllRequirements().toString());
-                    costP.setText(String.valueOf(specs.getLastCost()));
+                    costP.setText(String.valueOf(round(specs.getLastCost(),2)));
                     timeP.setText(String.valueOf(specs.getLastTime()));
                 }else if(source == AMDButton && specs.getCompany().equals("AMD")){
                     INTELButton.setBackground(Color.decode("#EBEBEB"));
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                     AMDButton.setBackground(Color.GRAY);
                     requirementsP.setText(specs.getAllRequirements().toString());
-                    costP.setText(String.valueOf(specs.getLastCost()));
+                    costP.setText(String.valueOf(round(specs.getLastCost(),2)));
                     timeP.setText(String.valueOf(specs.getLastTime()));
                 }
             }
@@ -240,6 +242,14 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         } catch(NumberFormatException er) {
             return true;
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     private void createUIComponents() {
