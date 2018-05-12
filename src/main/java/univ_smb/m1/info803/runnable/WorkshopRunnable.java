@@ -6,6 +6,7 @@ import univ_smb.m1.info803.util.Pipe;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class WorkshopRunnable implements Runnable {
     private Pipe<Specification> plantToWorkshopSpecificationsPipe;
@@ -30,7 +31,10 @@ public class WorkshopRunnable implements Runnable {
                 // System.out.println("Workshop " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
                 // System.out.println(spec);
 
-                SpecificationAlteration alteration = new SpecificationAlteration(spec, new ArrayList<>(), 1000, 999);
+                double randCost = ThreadLocalRandom.current().nextInt(100, 10000);
+                int randTime = ThreadLocalRandom.current().nextInt(10, 200);
+
+                SpecificationAlteration alteration = new SpecificationAlteration(spec, new ArrayList<>(), randCost, randTime);
 
                 workshopToPlantSpecificationsPipe.write(alteration);
 

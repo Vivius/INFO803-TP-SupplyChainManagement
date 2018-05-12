@@ -7,6 +7,7 @@ import univ_smb.m1.info803.util.Pipe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class DesignRunnable implements Runnable {
     private Pipe<Specification> plantToDesignSpecificationsPipe;
@@ -32,7 +33,13 @@ public class DesignRunnable implements Runnable {
                 // System.out.println(spec);
 
                 List<String> newRequirements = new ArrayList<>();
-                newRequirements.add("make a test");
+                int startIndex = ThreadLocalRandom.current().nextInt(10, 1000);
+                int nbRequirements = ThreadLocalRandom.current().nextInt(1, 10);
+
+                for(int i=startIndex; i<startIndex + nbRequirements; ++i) {
+                    newRequirements.add("Requirement N-" + i);
+                }
+
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, newRequirements);
 
                 designToPlantSpecificationsPipe.write(alteration);
