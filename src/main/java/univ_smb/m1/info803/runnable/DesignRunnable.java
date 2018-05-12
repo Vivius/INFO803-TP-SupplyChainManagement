@@ -37,7 +37,7 @@ public class DesignRunnable implements Runnable {
                 int nbRequirements = ThreadLocalRandom.current().nextInt(1, 10);
 
                 for(int i=startIndex; i<startIndex + nbRequirements; ++i) {
-                    newRequirements.add("Requirement N-" + i);
+                    newRequirements.add("REQ-" + i);
                 }
 
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, newRequirements);
