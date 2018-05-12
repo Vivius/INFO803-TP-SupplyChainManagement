@@ -5,6 +5,7 @@ import univ_smb.m1.info803.ApplicationListener;
 import univ_smb.m1.info803.model.Specification;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public class Home implements ApplicationListener {
 
@@ -45,19 +46,23 @@ public class Home implements ApplicationListener {
         proposition3.setVisible(false);
     }
 
-    public JPanel getWindow() {
-        return window;
-    }
-
-    public Home(Application app) {
-        this.app = app;
-        app.addApplicationListener(this);
+    public Home() throws IOException {
         init();
+        this.app = new Application();
+        app.addApplicationListener(this);
+        new Thread(app).start();
     }
 
     @Override
     public void specificationProcessed(Specification spec) {
-        System.err.println("Cahier des charges traité");
         System.err.println(spec);
+    }
+
+    public static void main(String args[]) throws IOException {
+        JFrame frame = new JFrame("Supply Chain Management");
+        frame.setContentPane(new Home().window);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
     }
 }

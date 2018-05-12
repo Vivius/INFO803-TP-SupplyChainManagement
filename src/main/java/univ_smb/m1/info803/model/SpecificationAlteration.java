@@ -4,16 +4,16 @@ import java.io.Serializable;
 import java.util.List;
 
 public class SpecificationAlteration implements Serializable {
-    private Specification specification;
+    private int specificationId;
     private List<String> requirements;
     private double cost;
     private int time;
 
     public SpecificationAlteration(Specification specification, List<String> requirements) {
         this.requirements = requirements;
-        this.cost = specification.getCost();
-        this.time = specification.getTime();
-        this.specification = specification;
+        this.specificationId = specification.getId();
+        this.cost = -1;
+        this.time = -1;
     }
 
     public SpecificationAlteration(Specification specification, List<String> requirements, double cost, int time) {
@@ -35,8 +35,7 @@ public class SpecificationAlteration implements Serializable {
     }
 
     public int getSpecificationId() {
-        if(specification != null) return specification.getId();
-        else                      return 0;
+        return specificationId;
     }
 
     @Override
