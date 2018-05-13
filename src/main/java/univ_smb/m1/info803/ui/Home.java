@@ -150,8 +150,7 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         accepterP2Button.addActionListener(this);
         refuserP2Button.addActionListener(this);
         accepterP3Button.addActionListener(this);
-        refuserP3Button.addActionListener(this);
-
+        refuserP3Button.addActionListener(e -> actionRefuserP3());
     }
 
     private Home() throws IOException {
@@ -487,22 +486,23 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             }
             accepterP2Button.setVisible(false);
             refuserP2Button.setVisible(false);
-        }else if(source == refuserP3Button) {
-            compteurRefusP3++;
-            if (currentP3View.equals("TNT")) {
-                TNTButton.setEnabled(false);
-                TNTButton.setBackground(Color.decode("#940900"));
-            } else if (currentP3View.equals("DHL")) {
-                DHLButton.setEnabled(false);
-                DHLButton.setBackground(Color.decode("#940900"));
-            } else if (currentP3View.equals("COLLISIMO")) {
-                COLLISIMOButton.setEnabled(false);
-                COLLISIMOButton.setBackground(Color.decode("#940900"));
-            }
-            accepterP3Button.setVisible(false);
-            refuserP3Button.setVisible(false);
         }
         frame.pack();
+    }
+    private void actionRefuserP3(){
+        compteurRefusP3++;
+        if (currentP3View.equals("TNT")) {
+            TNTButton.setEnabled(false);
+            TNTButton.setBackground(Color.decode("#940900"));
+        } else if (currentP3View.equals("DHL")) {
+            DHLButton.setEnabled(false);
+            DHLButton.setBackground(Color.decode("#940900"));
+        } else if (currentP3View.equals("COLLISIMO")) {
+            COLLISIMOButton.setEnabled(false);
+            COLLISIMOButton.setBackground(Color.decode("#940900"));
+        }
+        accepterP3Button.setVisible(false);
+        refuserP3Button.setVisible(false);
     }
 
     private boolean validateCDC() {
