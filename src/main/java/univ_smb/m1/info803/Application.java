@@ -1,6 +1,9 @@
 package univ_smb.m1.info803;
 
+import univ_smb.m1.info803.model.Order;
+import univ_smb.m1.info803.model.Packaging;
 import univ_smb.m1.info803.model.Specification;
+import univ_smb.m1.info803.model.Transporter;
 import univ_smb.m1.info803.runnable.*;
 import univ_smb.m1.info803.util.Pipe;
 
@@ -19,6 +22,7 @@ public class Application implements Runnable {
     // Pipes (pour la communication entre le client et les threads)
     private Pipe<Specification> clientToLogisticsSpecificationsPipe;
     private Pipe<Specification> plantToClientSpecificationsPipe;
+    private Pipe<Order> clientToLogisiticsOrdersPipe;
 
     // Listeners
     private List<ApplicationListener> listeners;
@@ -32,19 +36,39 @@ public class Application implements Runnable {
 
         this.clientToLogisticsSpecificationsPipe = new Pipe<>();
         this.plantToClientSpecificationsPipe = new Pipe<>();
+        this.clientToLogisiticsOrdersPipe = new Pipe<>();
 
         // Création des runnables
         Pipe<Specification> logisticsToPlantSpecificationsPipe = new Pipe<>();
 
-        this.runnables.add(new LogisticsRunnable(clientToLogisticsSpecificationsPipe, logisticsToPlantSpecificationsPipe));
+        Pipe<Order> logisticsToTransporterOrdersPipe = new Pipe<>();
+        Pipe<Order> logisticsToSupplierOrdersPipe = new Pipe<>();
+
+        Pipe<Transporter> transporterToLogisticsTransporterPipe = new Pipe<>();
+        Pipe<Packaging> supplierToLogisticsPackagingPipe = new Pipe<>();
+
+        this.runnables.add(new LogisticsRunnable(
+                clientToLogisticsSpecificationsPipe,
+                logisticsToPlantSpecificationsPipe,
+                clientToLogisiticsOrdersPipe,
+                logisticsToTransporterOrdersPipe,
+                logisticsToSupplierOrdersPipe,
+                transporterToLogisticsTransporterPipe,
+                supplierToLogisticsPackagingPipe));
 
         this.runnables.add(new PlantRunnable("NVIDIA", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
         this.runnables.add(new PlantRunnable("INTEL", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
         this.runnables.add(new PlantRunnable("AMD", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
 
+        this.runnables.add(new SupplierRunnable("EMBALEX", logisticsToSupplierOrdersPipe, supplierToLogisticsPackagingPipe));
+        this.runnables.add(new SupplierRunnable("LESU", logisticsToSupplierOrdersPipe, supplierToLogisticsPackagingPipe));
+        this.runnables.add(new SupplierRunnable("FLEY", logisticsToSupplierOrdersPipe, supplierToLogisticsPackagingPipe));
+
+        this.runnables.add(new TransporterRunnable("DHL", logisticsToTransporterOrdersPipe, transporterToLogisticsTransporterPipe));
+        this.runnables.add(new TransporterRunnable("TNT", logisticsToTransporterOrdersPipe, transporterToLogisticsTransporterPipe));
+        this.runnables.add(new TransporterRunnable("COLLISIMO", logisticsToTransporterOrdersPipe, transporterToLogisticsTransporterPipe));
+
         this.runnables.add(new RetailerRunnable());
-        this.runnables.add(new SupplierRunnable());
-        this.runnables.add(new TransporterRunnable());
         this.runnables.add(new WarehouseRunnable());
 
         // Le 'monde' correspond à l'ensemble des entités (entreprises, transporteurs...) qui communiquent ensemble
@@ -89,6 +113,10 @@ public class Application implements Runnable {
 
     public void sendSpecification(Specification spec) throws IOException {
         clientToLogisticsSpecificationsPipe.write(spec);
+    }
+
+    public void sendOrder(Order order) throws IOException {
+        clientToLogisiticsOrdersPipe.write(order);
     }
 
     public void addApplicationListener(ApplicationListener listener) {
