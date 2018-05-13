@@ -115,22 +115,14 @@ public class LogisticsRunnable implements Runnable {
 
                 // Réception des offres d'emballage
                 if(supplierToLogisticsPackagingPipe.ready()) {
-                    for(Runnable run : Database.getInstance().getWorld()) {
-                        if(run.getClass().equals(SupplierRunnable.class)) {
-                            Packaging packaging = supplierToLogisticsPackagingPipe.read();
-                            logisticsToClientPackagingPipe.write(packaging);
-                        }
-                    }
+                    Packaging packaging = supplierToLogisticsPackagingPipe.read();
+                    logisticsToClientPackagingPipe.write(packaging);
                 }
 
                 // Réception des offres de transport
                 if(transporterToLogisticsTransporterPipe.ready()) {
-                    for(Runnable run : Database.getInstance().getWorld()) {
-                        if(run.getClass().equals(TransporterRunnable.class)) {
-                            Transporter transporter = transporterToLogisticsTransporterPipe.read();
-                            logisticsToClientTransporterPipe.write(transporter);
-                        }
-                    }
+                    Transporter transporter = transporterToLogisticsTransporterPipe.read();
+                    logisticsToClientTransporterPipe.write(transporter);
                 }
 
                 Thread.sleep(100);

@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PipedReader;
 import java.io.PipedWriter;
-import java.util.List;
 
 public class Pipe<T> {
     private PipedReader reader;
@@ -14,7 +13,7 @@ public class Pipe<T> {
 
     public Pipe() throws IOException {
         this.writer = new PipedWriter();
-        this.reader = new PipedReader(this.writer);
+        this.reader = new PipedReader(this.writer, 1000000);
         this.serializer = new Serializer<>();
         this.buffer = new BufferedReader(this.reader);
     }
@@ -30,6 +29,6 @@ public class Pipe<T> {
     }
 
     public boolean ready() throws IOException {
-        return reader.ready();
+        return buffer.ready();
     }
 }
