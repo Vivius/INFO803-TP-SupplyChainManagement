@@ -580,10 +580,6 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
         return bd.doubleValue();
     }
 
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
     }
