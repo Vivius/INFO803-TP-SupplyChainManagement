@@ -44,8 +44,12 @@ public class DesignRunnable implements Runnable {
 
                 designToPlantSpecificationsPipe.write(alteration);
 
-            } catch (IOException | ClassNotFoundException e) {
+                Thread.sleep(100);
+
+            } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 e.printStackTrace();
+                Thread.currentThread().interrupt();
+                break;
             }
 
         }

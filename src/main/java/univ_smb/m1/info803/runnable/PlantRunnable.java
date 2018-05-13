@@ -105,7 +105,9 @@ public class PlantRunnable implements Runnable {
                     alterations.clear();
                 }
 
-            } catch (IOException | ClassNotFoundException e) {
+                Thread.sleep(100);
+
+            } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
                 break;
