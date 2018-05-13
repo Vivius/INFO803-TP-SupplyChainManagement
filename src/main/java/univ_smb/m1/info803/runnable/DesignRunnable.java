@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class DesignRunnable implements Runnable {
-    private Pipe<Specification> plantToDesignSpecificationsPipe;
-    private Pipe<SpecificationAlteration> designToPlantSpecificationsPipe;
+    private final Pipe<Specification> plantToDesignSpecificationsPipe;
+    private final Pipe<SpecificationAlteration> designToPlantSpecificationsPipe;
 
     public DesignRunnable(Pipe<Specification> plantToDesignSpecificationsPipe, Pipe<SpecificationAlteration> designToPlantSpecificationsPipe) {
         this.plantToDesignSpecificationsPipe = plantToDesignSpecificationsPipe;

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WorkshopRunnable implements Runnable {
-    private Pipe<Specification> plantToWorkshopSpecificationsPipe;
-    private Pipe<SpecificationAlteration> workshopToPlantSpecificationsPipe;
+    private final Pipe<Specification> plantToWorkshopSpecificationsPipe;
+    private final Pipe<SpecificationAlteration> workshopToPlantSpecificationsPipe;
 
     public WorkshopRunnable(Pipe<Specification> plantToWorkshopSpecificationsPipe, Pipe<SpecificationAlteration> workshopToPlantSpecificationsPipe) {
         this.plantToWorkshopSpecificationsPipe = plantToWorkshopSpecificationsPipe;

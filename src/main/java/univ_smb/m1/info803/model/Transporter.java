@@ -1,6 +1,8 @@
 package univ_smb.m1.info803.model;
 
-public class Transporter {
+import java.io.Serializable;
+
+public class Transporter implements Serializable {
     private String company;
     private int quantity;
     private int speed;
@@ -35,6 +37,7 @@ public class Transporter {
                 "company='" + company + '\'' +
                 ", quantity=" + quantity +
                 ", speed=" + speed +
+                ", orderId=" + orderId +
                 '}';
     }
 }

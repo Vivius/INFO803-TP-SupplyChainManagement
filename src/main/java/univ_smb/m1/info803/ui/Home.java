@@ -3,7 +3,9 @@ package univ_smb.m1.info803.ui;
 import univ_smb.m1.info803.Application;
 import univ_smb.m1.info803.ApplicationListener;
 import univ_smb.m1.info803.model.Order;
+import univ_smb.m1.info803.model.Packaging;
 import univ_smb.m1.info803.model.Specification;
+import univ_smb.m1.info803.model.Transporter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 
-public class Home extends JFrame implements ActionListener,ApplicationListener {
+public class Home extends JFrame implements ActionListener, ApplicationListener {
 
     private final Application app;
     private static JFrame frame;
@@ -174,6 +176,16 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             AMDButton.setVisible(true);
         }
         frame.pack();
+    }
+
+    @Override
+    public void packagingReceived(Packaging packaging) {
+        System.err.println(packaging);
+    }
+
+    @Override
+    public void transporterReceived(Transporter transporter) {
+        System.err.println(transporter);
     }
 
     public static void main(String args[]) throws IOException {

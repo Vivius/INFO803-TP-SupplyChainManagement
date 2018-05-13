@@ -7,23 +7,27 @@ import univ_smb.m1.info803.util.Pipe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 public class PlantRunnable implements Runnable {
-    private String companyName;
+    private final String companyName;
 
-    private Pipe<Specification> logisticsToPlantSpecificationsPipe;
-    private Pipe<Specification> plantToDesignSpecificationsPipe;
-    private Pipe<Specification> plantToWorkshopSpecificationsPipe;
-    private Pipe<SpecificationAlteration> workshopToPLantAlterationsPipe;
-    private Pipe<SpecificationAlteration> designToPlantAlterationsPipe;
-    private Pipe<Specification> plantToClientSpecificationsPipe;
+    private final Pipe<Specification> logisticsToPlantSpecificationsPipe;
+    private final Pipe<Specification> plantToDesignSpecificationsPipe;
+    private final Pipe<Specification> plantToWorkshopSpecificationsPipe;
+    private final Pipe<SpecificationAlteration> workshopToPLantAlterationsPipe;
+    private final Pipe<SpecificationAlteration> designToPlantAlterationsPipe;
+    private final Pipe<Specification> plantToClientSpecificationsPipe;
 
-    private List<Specification> specificationsProcessed;
-    private List<SpecificationAlteration> alterations;
+    private final List<Specification> specificationsProcessed;
+    private final List<SpecificationAlteration> alterations;
 
-    private Thread workshop;
-    private Thread design;
+    private final Thread workshop;
+    private final Thread design;
+
+    private final Lock mutex = new ReentrantLock(true);
 
     public PlantRunnable(String companyName, Pipe<Specification> logisticsToPlantSpecificationsPipe, Pipe<Specification> plantToClientSpecificationsPipe) throws IOException {
         this.companyName = companyName;
@@ -72,7 +76,9 @@ public class PlantRunnable implements Runnable {
                         plantToWorkshopSpecificationsPipe.write(spec);
                     } else {
                         // On renvoie la spec si elle ne nous est pas destinée
+                        mutex.lock();
                         logisticsToPlantSpecificationsPipe.write(spec);
+                        mutex.unlock();
                         Thread.yield();
                     }
                 }

@@ -13,17 +13,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LogisticsRunnable implements Runnable {
-    private Pipe<Specification> clientToLogisticsSpecificationsPipe;
-    private Pipe<Specification> logisticsToPlantSpecificationsPipe;
+    private final Pipe<Specification> clientToLogisticsSpecificationsPipe;
+    private final Pipe<Specification> logisticsToPlantSpecificationsPipe;
 
-    private Pipe<Order> clientToLogisiticsOrdersPipe;
-    private Pipe<Order> logisticsToTransporterOrdersPipe;
-    private Pipe<Order> logisticsToSupplierOrdersPipe;
+    private final Pipe<Order> clientToLogisiticsOrdersPipe;
+    private final Pipe<Order> logisticsToTransporterOrdersPipe;
+    private final Pipe<Order> logisticsToSupplierOrdersPipe;
 
-    private Pipe<Packaging> supplierToLogisticsPackagingPipe;
-    private Pipe<Transporter> transporterToLogisticsTransporterPipe;
+    private final Pipe<Packaging> supplierToLogisticsPackagingPipe;
+    private final Pipe<Packaging> logisticsToClientPackagingPipe;
 
-    private List<Order> processedOrders;
+    private final Pipe<Transporter> transporterToLogisticsTransporterPipe;
+    private final Pipe<Transporter> logisticsToClientTransporterPipe;
+
+    private final List<Order> processedOrders;
 
     public LogisticsRunnable(Pipe<Specification> clientToLogisticsSpecificationsPipe,
                              Pipe<Specification> logisticsToPlantSpecificationsPipe,
@@ -31,18 +34,19 @@ public class LogisticsRunnable implements Runnable {
                              Pipe<Order> logisticsToTransporterOrdersPipe,
                              Pipe<Order> logisticsToSupplierOrdersPipe,
                              Pipe<Transporter> transporterToLogisticsTransporterPipe,
-                             Pipe<Packaging> supplierToLogisticsPackagingPipe)
+                             Pipe<Packaging> supplierToLogisticsPackagingPipe,
+                             Pipe<Packaging> logisticsToClientPackagingPipe,
+                             Pipe<Transporter> logisticsToClientTransporterPipe)
     {
         this.clientToLogisticsSpecificationsPipe = clientToLogisticsSpecificationsPipe;
         this.logisticsToPlantSpecificationsPipe = logisticsToPlantSpecificationsPipe;
-
         this.clientToLogisiticsOrdersPipe = clientToLogisiticsOrdersPipe;
         this.logisticsToTransporterOrdersPipe = logisticsToTransporterOrdersPipe;
         this.logisticsToSupplierOrdersPipe = logisticsToSupplierOrdersPipe;
-
         this.supplierToLogisticsPackagingPipe = supplierToLogisticsPackagingPipe;
-
         this.transporterToLogisticsTransporterPipe = transporterToLogisticsTransporterPipe;
+        this.logisticsToClientPackagingPipe = logisticsToClientPackagingPipe;
+        this.logisticsToClientTransporterPipe = logisticsToClientTransporterPipe;
 
         this.processedOrders = new ArrayList<>();
     }
@@ -60,6 +64,7 @@ public class LogisticsRunnable implements Runnable {
 
                 // On s'occupe d'envoyer le cahier des charges d'un client aux usines (plants).
                 if(clientToLogisticsSpecificationsPipe.ready()) {
+
                     // Réception d'un cahier des charges
                     Specification spec = clientToLogisticsSpecificationsPipe.read();
 
@@ -71,6 +76,7 @@ public class LogisticsRunnable implements Runnable {
                             Thread.sleep(100);
                         }
                     }
+
                 }
 
                 // Réception des commandes
@@ -103,6 +109,27 @@ public class LogisticsRunnable implements Runnable {
                             }
                         }
 
+                    }
+
+                }
+
+                // Réception des offres d'emballage
+                if(supplierToLogisticsPackagingPipe.ready()) {
+                    for(Runnable run : Database.getInstance().getWorld()) {
+                        if(run.getClass().equals(SupplierRunnable.class)) {
+                            Packaging packaging = supplierToLogisticsPackagingPipe.read();
+                            logisticsToClientPackagingPipe.write(packaging);
+                        }
+                    }
+                }
+
+                // Réception des offres de transport
+                if(transporterToLogisticsTransporterPipe.ready()) {
+                    for(Runnable run : Database.getInstance().getWorld()) {
+                        if(run.getClass().equals(TransporterRunnable.class)) {
+                            Transporter transporter = transporterToLogisticsTransporterPipe.read();
+                            logisticsToClientTransporterPipe.write(transporter);
+                        }
                     }
                 }
 

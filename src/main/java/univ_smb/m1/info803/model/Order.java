@@ -1,7 +1,9 @@
 package univ_smb.m1.info803.model;
 
-public class Order {
-    private static int index = 0;
+import java.io.Serializable;
+
+public class Order implements Serializable {
+    private static int index = 1;
 
     private int id;
     private Specification specification;

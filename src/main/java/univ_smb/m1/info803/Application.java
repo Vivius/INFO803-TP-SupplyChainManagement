@@ -13,19 +13,21 @@ import java.util.List;
 
 public class Application implements Runnable {
     // Contient certains données globales
-    private Database db;
+    private final Database db;
 
     // Liste des threads et runnables exécutés
     private List<Thread> threads;
     private List<Runnable> runnables;
 
     // Pipes (pour la communication entre le client et les threads)
-    private Pipe<Specification> clientToLogisticsSpecificationsPipe;
-    private Pipe<Specification> plantToClientSpecificationsPipe;
-    private Pipe<Order> clientToLogisiticsOrdersPipe;
+    private final Pipe<Specification> clientToLogisticsSpecificationsPipe;
+    private final Pipe<Specification> plantToClientSpecificationsPipe;
+    private final Pipe<Order> clientToLogisiticsOrdersPipe;
+    private final Pipe<Packaging> logisticsToClientPackagingPipe;
+    private final Pipe<Transporter> logisticsToClientTransporterPipe;
 
     // Listeners
-    private List<ApplicationListener> listeners;
+    private final List<ApplicationListener> listeners;
 
     public Application() throws IOException {
         this.db = Database.getInstance();
@@ -37,6 +39,8 @@ public class Application implements Runnable {
         this.clientToLogisticsSpecificationsPipe = new Pipe<>();
         this.plantToClientSpecificationsPipe = new Pipe<>();
         this.clientToLogisiticsOrdersPipe = new Pipe<>();
+        this.logisticsToClientPackagingPipe = new Pipe<>();
+        this.logisticsToClientTransporterPipe = new Pipe<>();
 
         // Création des runnables
         Pipe<Specification> logisticsToPlantSpecificationsPipe = new Pipe<>();
@@ -54,7 +58,9 @@ public class Application implements Runnable {
                 logisticsToTransporterOrdersPipe,
                 logisticsToSupplierOrdersPipe,
                 transporterToLogisticsTransporterPipe,
-                supplierToLogisticsPackagingPipe));
+                supplierToLogisticsPackagingPipe,
+                logisticsToClientPackagingPipe,
+                logisticsToClientTransporterPipe));
 
         this.runnables.add(new PlantRunnable("NVIDIA", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
         this.runnables.add(new PlantRunnable("INTEL", logisticsToPlantSpecificationsPipe, plantToClientSpecificationsPipe));
@@ -90,11 +96,26 @@ public class Application implements Runnable {
         // Traitements effectués par le client...
         while(true) {
             try {
-                Specification spec = plantToClientSpecificationsPipe.read();
 
-                // On indique aux listeners qu'un cahier des charge a été traité
-                for(ApplicationListener listener : listeners) {
-                    listener.specificationProcessed(spec);
+                if(plantToClientSpecificationsPipe.ready()) {
+                    Specification spec = plantToClientSpecificationsPipe.read();
+                    for(ApplicationListener listener : listeners) {
+                        listener.specificationProcessed(spec);
+                    }
+                }
+
+                if(logisticsToClientPackagingPipe.ready()) {
+                    Packaging packaging = logisticsToClientPackagingPipe.read();
+                    for(ApplicationListener listener : listeners) {
+                        listener.packagingReceived(packaging);
+                    }
+                }
+
+                if(logisticsToClientTransporterPipe.ready()) {
+                    Transporter transporter= logisticsToClientTransporterPipe.read();
+                    for(ApplicationListener listener : listeners) {
+                        listener.transporterReceived(transporter);
+                    }
                 }
 
             } catch (ClassNotFoundException | IOException e) {

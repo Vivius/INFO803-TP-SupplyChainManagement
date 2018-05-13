@@ -1,6 +1,8 @@
 package univ_smb.m1.info803.model;
 
-public class Packaging {
+import java.io.Serializable;
+
+public class Packaging implements Serializable {
     private String company;
     private String color;
     private double weight;
@@ -42,6 +44,7 @@ public class Packaging {
                 ", color='" + color + '\'' +
                 ", weight=" + weight +
                 ", size=" + size +
+                ", orderId=" + orderId +
                 '}';
     }
 }
