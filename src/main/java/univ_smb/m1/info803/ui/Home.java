@@ -121,13 +121,13 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         NVIDIAButton.setVisible(false);
         AMDButton.setVisible(false);
 
-        //EMBALEXButton.setVisible(false);
-        //FLEYButton.setVisible(false);
-        //LESUButton.setVisible(false);
+        EMBALEXButton.setVisible(false);
+        FLEYButton.setVisible(false);
+        LESUButton.setVisible(false);
 
-        //DHLButton.setVisible(false);
-        //COLLISIMOButton.setVisible(false);
-        //TNTButton.setVisible(false);
+        DHLButton.setVisible(false);
+        COLLISIMOButton.setVisible(false);
+        TNTButton.setVisible(false);
 
         proposition1.setVisible(false);
         proposition2.setVisible(false);
@@ -290,6 +290,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 INTELButton.setBackground(Color.GRAY);
+                requirementsP.setText(specs.getAllRequirements().toString());
+                costP.setText(String.valueOf(round(specs.getLastCost())));
+                timeP.setText(String.valueOf(specs.getLastTime()));
             }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
                 currentP1View = "NVIDIA";
                 if(INTELButton.isEnabled()) {
@@ -299,6 +302,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     AMDButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 NVIDIAButton.setBackground(Color.GRAY);
+                requirementsP.setText(specs.getAllRequirements().toString());
+                costP.setText(String.valueOf(round(specs.getLastCost())));
+                timeP.setText(String.valueOf(specs.getLastTime()));
             }else if(source == AMDButton && specs.getCompany().equals("AMD")){
                 currentP1View = "AMD";
                 if(INTELButton.isEnabled()) {
@@ -308,10 +314,10 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 AMDButton.setBackground(Color.GRAY);
+                requirementsP.setText(specs.getAllRequirements().toString());
+                costP.setText(String.valueOf(round(specs.getLastCost())));
+                timeP.setText(String.valueOf(specs.getLastTime()));
             }
-            requirementsP.setText(specs.getAllRequirements().toString());
-            costP.setText(String.valueOf(round(specs.getLastCost())));
-            timeP.setText(String.valueOf(specs.getLastTime()));
         }
         costP.setVisible(true);
         requirementsP.setVisible(true);
@@ -335,6 +341,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     FLEYButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 EMBALEXButton.setBackground(Color.GRAY);
+                colorP2.setText(packaging.getColor());
+                weightP2.setText(String.valueOf(packaging.getWeight()));
+                sizeP2.setText(String.valueOf(packaging.getSize()));
             } else if (source == LESUButton && packaging.getCompany().equals("LESU")) {
                 currentP2View = "LESU";
                 if (EMBALEXButton.isEnabled()) {
@@ -344,7 +353,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     FLEYButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 LESUButton.setBackground(Color.GRAY);
-
+                colorP2.setText(packaging.getColor());
+                weightP2.setText(String.valueOf(packaging.getWeight()));
+                sizeP2.setText(String.valueOf(packaging.getSize()));
             } else if (source == FLEYButton && packaging.getCompany().equals("FLEY")) {
                 currentP2View = "FLEY";
                 if (LESUButton.isEnabled()) {
@@ -354,10 +365,10 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     EMBALEXButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 FLEYButton.setBackground(Color.GRAY);
+                colorP2.setText(packaging.getColor());
+                weightP2.setText(String.valueOf(packaging.getWeight()));
+                sizeP2.setText(String.valueOf(packaging.getSize()));
             }
-            colorP2.setText(packaging.getColor());
-            weightP2.setText(String.valueOf(packaging.getWeight()));
-            sizeP2.setText(String.valueOf(packaging.getSize()));
         }
         colorP2.setVisible(true);
         weightP2.setVisible(true);
@@ -384,6 +395,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     DHLButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 TNTButton.setBackground(Color.GRAY);
+                quantityP3.setText(String.valueOf(transporter.getQuantity()));
+                speedP3.setText(String.valueOf(transporter.getSpeed()));
             } else if (source == COLLISIMOButton && transporter.getCompany().equals("COLLISIMO")) {
                 currentP3View = "COLLISIMO";
                 if (DHLButton.isEnabled()) {
@@ -393,6 +406,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     TNTButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 COLLISIMOButton.setBackground(Color.GRAY);
+                quantityP3.setText(String.valueOf(transporter.getQuantity()));
+                speedP3.setText(String.valueOf(transporter.getSpeed()));
             } else if (source == DHLButton && transporter.getCompany().equals("DHL")) {
                 currentP3View = "DHL";
                 if (TNTButton.isEnabled()) {
@@ -402,9 +417,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     COLLISIMOButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 DHLButton.setBackground(Color.GRAY);
+                quantityP3.setText(String.valueOf(transporter.getQuantity()));
+                speedP3.setText(String.valueOf(transporter.getSpeed()));
             }
-            quantityP3.setText(String.valueOf(transporter.getQuantity()));
-            speedP3.setText(String.valueOf(transporter.getSpeed()));
         }
         quantityP3.setVisible(true);
         speedP3.setVisible(true);
