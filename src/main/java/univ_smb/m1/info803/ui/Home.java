@@ -77,6 +77,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
     private JButton accepterP3Button;
     private JButton refuserP3Button;
     private ArrayList<Specification> specifications = new ArrayList<>();
+    private ArrayList<Packaging> packagings = new ArrayList<>();
+    private ArrayList<Transporter> transporters = new ArrayList<>();
     private String currentP1View = "";
     private String currentP2View = "";
     private String currentP3View = "";
@@ -84,6 +86,7 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
     private Integer compteurRefusP2 = 1;
     private Integer compteurRefusP3 = 1;
     private Specification currentSpec;
+    private Order currentOrder;
 
     private void init(){
         appel2.setVisible(false);
@@ -169,9 +172,9 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         specifications.add(spec);
 
         if(spec.getCompany().equals("NVIDIA")){
-            INTELButton.setVisible(true);
-        }else if(spec.getCompany().equals("INTEL")){
             NVIDIAButton.setVisible(true);
+        }else if(spec.getCompany().equals("INTEL")){
+            INTELButton.setVisible(true);
         }else if(spec.getCompany().equals("AMD")){
             AMDButton.setVisible(true);
         }
@@ -181,11 +184,33 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
     @Override
     public void packagingReceived(Packaging packaging) {
         System.err.println(packaging);
+
+        packagings.add(packaging);
+
+        if(packaging.getCompany().equals("EMBALEX")){
+            EMBALEXButton.setVisible(true);
+        }else if(packaging.getCompany().equals("FLEY")){
+            FLEYButton.setVisible(true);
+        }else if(packaging.getCompany().equals("LESU")){
+            LESUButton.setVisible(true);
+        }
+        frame.pack();
     }
 
     @Override
     public void transporterReceived(Transporter transporter) {
         System.err.println(transporter);
+
+        transporters.add(transporter);
+
+        if(transporter.getCompany().equals("TNT")){
+            TNTButton.setVisible(true);
+        }else if(transporter.getCompany().equals("COLLISIMO")){
+            COLLISIMOButton.setVisible(true);
+        }else if(transporter.getCompany().equals("DHL")){
+            DHLButton.setVisible(true);
+        }
+        frame.pack();
     }
 
     public static void main(String args[]) throws IOException {
@@ -222,34 +247,35 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
             appel1.setEnabled(false);
             envoyerButton.setEnabled(false);
             proposition1.setVisible(true);
-            System.err.println("CDC Envoyé !");
+            System.err.println("Order 1 envoyé !");
         } catch (IOException e1) {
             e1.printStackTrace();
         }
         frame.pack();
     }
     private void actionEnvoyerA2(){
-        //TODO : SEND APPEL 2
         try {
-            app.sendOrder(new Order(currentSpec));
-            System.err.println("ORDER ENVOYER");
+            app.sendOrder(currentOrder = new Order(currentSpec));
+            appel2.setEnabled(false);
+            envoyerButton1.setEnabled(false);
+            proposition2.setVisible(true);
+            System.err.println("Order 2 envoyé !");
         } catch (IOException e1) {
             e1.printStackTrace();
         }
-        appel2.setEnabled(false);
-        envoyerButton1.setEnabled(false);
-        proposition2.setVisible(true);
-        System.err.println("Appel 2 Envoyé !");
         frame.pack();
     }
 
     private void actionEnvoyerA3(){
-        //TODO : SEND APPEL 3
-
-        appel3.setEnabled(false);
-        envoyerButton2.setEnabled(false);
-        proposition3.setVisible(true);
-        System.err.println("Appel 3 Envoyé !");
+        try {
+            app.sendOrder(currentOrder);
+            appel3.setEnabled(false);
+            envoyerButton2.setEnabled(false);
+            proposition3.setVisible(true);
+            System.err.println("Order 3 envoyé !");
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
         frame.pack();
     }
 
@@ -264,9 +290,6 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 INTELButton.setBackground(Color.GRAY);
-                requirementsP.setText(specs.getAllRequirements().toString());
-                costP.setText(String.valueOf(round(specs.getLastCost())));
-                timeP.setText(String.valueOf(specs.getLastTime()));
             }else if(source == NVIDIAButton && specs.getCompany().equals("NVIDIA")){
                 currentP1View = "NVIDIA";
                 if(INTELButton.isEnabled()) {
@@ -276,9 +299,6 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     AMDButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 NVIDIAButton.setBackground(Color.GRAY);
-                requirementsP.setText(specs.getAllRequirements().toString());
-                costP.setText(String.valueOf(round(specs.getLastCost())));
-                timeP.setText(String.valueOf(specs.getLastTime()));
             }else if(source == AMDButton && specs.getCompany().equals("AMD")){
                 currentP1View = "AMD";
                 if(INTELButton.isEnabled()) {
@@ -288,10 +308,10 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                     NVIDIAButton.setBackground(Color.decode("#EBEBEB"));
                 }
                 AMDButton.setBackground(Color.GRAY);
-                requirementsP.setText(specs.getAllRequirements().toString());
-                costP.setText(String.valueOf(round(specs.getLastCost())));
-                timeP.setText(String.valueOf(specs.getLastTime()));
             }
+            requirementsP.setText(specs.getAllRequirements().toString());
+            costP.setText(String.valueOf(round(specs.getLastCost())));
+            timeP.setText(String.valueOf(specs.getLastTime()));
         }
         costP.setVisible(true);
         requirementsP.setVisible(true);
@@ -305,42 +325,39 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
     }
 
     private void actionEntrepriseP2(Object source){
-        if(source == EMBALEXButton){
-            currentP2View = "EMBALEX";
-            if(LESUButton.isEnabled()) {
-                LESUButton.setBackground(Color.decode("#EBEBEB"));
+        for (Packaging packaging : packagings) {
+            if (source == EMBALEXButton && packaging.getCompany().equals("EMBALEX")) {
+                currentP2View = "EMBALEX";
+                if (LESUButton.isEnabled()) {
+                    LESUButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (FLEYButton.isEnabled()) {
+                    FLEYButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                EMBALEXButton.setBackground(Color.GRAY);
+            } else if (source == LESUButton && packaging.getCompany().equals("LESU")) {
+                currentP2View = "LESU";
+                if (EMBALEXButton.isEnabled()) {
+                    EMBALEXButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (FLEYButton.isEnabled()) {
+                    FLEYButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                LESUButton.setBackground(Color.GRAY);
+
+            } else if (source == FLEYButton && packaging.getCompany().equals("FLEY")) {
+                currentP2View = "FLEY";
+                if (LESUButton.isEnabled()) {
+                    LESUButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (EMBALEXButton.isEnabled()) {
+                    EMBALEXButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                FLEYButton.setBackground(Color.GRAY);
             }
-            if(FLEYButton.isEnabled()) {
-                FLEYButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            EMBALEXButton.setBackground(Color.GRAY);
-            colorP2.setText("EMBALEX value");
-            weightP2.setText("EMBALEX value");
-            sizeP2.setText(String.valueOf("EMBALEX value"));
-        }else if(source == LESUButton){
-            currentP2View = "LESU";
-            if(EMBALEXButton.isEnabled()) {
-                EMBALEXButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            if(FLEYButton.isEnabled()) {
-                FLEYButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            LESUButton.setBackground(Color.GRAY);
-            colorP2.setText("LESU value");
-            weightP2.setText("LESU value");
-            sizeP2.setText(String.valueOf("LESU value"));
-        }else if(source == FLEYButton){
-            currentP2View = "FLEY";
-            if(LESUButton.isEnabled()) {
-                LESUButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            if(EMBALEXButton.isEnabled()) {
-                EMBALEXButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            FLEYButton.setBackground(Color.GRAY);
-            colorP2.setText("FLEY value");
-            weightP2.setText("FLEY value");
-            sizeP2.setText(String.valueOf("FLEY value"));
+            colorP2.setText(packaging.getColor());
+            weightP2.setText(String.valueOf(packaging.getWeight()));
+            sizeP2.setText(String.valueOf(packaging.getSize()));
         }
         colorP2.setVisible(true);
         weightP2.setVisible(true);
@@ -353,41 +370,41 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         }
         accepterP2Button.setVisible(true);
         frame.pack();
+
     }
     private void actionEntrepriseP3(Object source){
-        if(source == TNTButton){
-            currentP3View = "TNT";
-            if(COLLISIMOButton.isEnabled()) {
-                COLLISIMOButton.setBackground(Color.decode("#EBEBEB"));
+        for (Transporter transporter : transporters) {
+
+            if (source == TNTButton && transporter.getCompany().equals("TNT")) {
+                currentP3View = "TNT";
+                if (COLLISIMOButton.isEnabled()) {
+                    COLLISIMOButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (DHLButton.isEnabled()) {
+                    DHLButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                TNTButton.setBackground(Color.GRAY);
+            } else if (source == COLLISIMOButton && transporter.getCompany().equals("COLLISIMO")) {
+                currentP3View = "COLLISIMO";
+                if (DHLButton.isEnabled()) {
+                    DHLButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (TNTButton.isEnabled()) {
+                    TNTButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                COLLISIMOButton.setBackground(Color.GRAY);
+            } else if (source == DHLButton && transporter.getCompany().equals("DHL")) {
+                currentP3View = "DHL";
+                if (TNTButton.isEnabled()) {
+                    TNTButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                if (COLLISIMOButton.isEnabled()) {
+                    COLLISIMOButton.setBackground(Color.decode("#EBEBEB"));
+                }
+                DHLButton.setBackground(Color.GRAY);
             }
-            if(DHLButton.isEnabled()) {
-                DHLButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            TNTButton.setBackground(Color.GRAY);
-            quantityP3.setText("TNT value");
-            speedP3.setText("TNT value");
-        }else if(source == COLLISIMOButton){
-            currentP3View = "COLLISIMO";
-            if(DHLButton.isEnabled()) {
-                DHLButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            if(TNTButton.isEnabled()) {
-                TNTButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            COLLISIMOButton.setBackground(Color.GRAY);
-            quantityP3.setText("COLLISIMO value");
-            speedP3.setText("COLLISIMO value");
-        }else if(source == DHLButton){
-            currentP3View = "DHL";
-            if(TNTButton.isEnabled()) {
-                TNTButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            if(COLLISIMOButton.isEnabled()) {
-                COLLISIMOButton.setBackground(Color.decode("#EBEBEB"));
-            }
-            DHLButton.setBackground(Color.GRAY);
-            quantityP3.setText("DHL value");
-            speedP3.setText("DHL value");
+            quantityP3.setText(String.valueOf(transporter.getQuantity()));
+            speedP3.setText(String.valueOf(transporter.getSpeed()));
         }
         quantityP3.setVisible(true);
         speedP3.setVisible(true);
@@ -407,12 +424,17 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         accepterP1Button.setVisible(false);
         refuserP1Button.setVisible(false);
 
-        if(currentP1View.equals("NVIDIA")){
-            NVIDIAButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP1View.equals("AMD")){
-            AMDButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP1View.equals("INTEL")){
-            INTELButton.setBackground(Color.decode("#1F6617"));
+        for (Specification specs : specifications) {
+            if (currentP1View.equals("NVIDIA") && specs.getCompany().equals("NVIDIA")) {
+                NVIDIAButton.setBackground(Color.decode("#1F6617"));
+                currentSpec = specs;
+            } else if (currentP1View.equals("AMD") && specs.getCompany().equals("AMD")) {
+                AMDButton.setBackground(Color.decode("#1F6617"));
+                currentSpec = specs;
+            } else if (currentP1View.equals("INTEL") && specs.getCompany().equals("INTEL")) {
+                INTELButton.setBackground(Color.decode("#1F6617"));
+                currentSpec = specs;
+            }
         }
         appel2.setVisible(true);
         frame.pack();
@@ -425,12 +447,18 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         proposition2.setEnabled(false);
         accepterP2Button.setVisible(false);
         refuserP2Button.setVisible(false);
-        if(currentP2View.equals("EMBALEX")){
-            EMBALEXButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP2View.equals("FLEY")){
-            FLEYButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP2View.equals("LESU")){
-            LESUButton.setBackground(Color.decode("#1F6617"));
+
+        for (Packaging packaging : packagings) {
+            if (currentP2View.equals("EMBALEX") && packaging.getCompany().equals("EMBALEX")) {
+                EMBALEXButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setPackaging(packaging);
+            } else if (currentP2View.equals("FLEY") && packaging.getCompany().equals("FLEY") ) {
+                FLEYButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setPackaging(packaging);
+            } else if (currentP2View.equals("LESU")  && packaging.getCompany().equals("LESU") ) {
+                LESUButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setPackaging(packaging);
+            }
         }
         appel3.setVisible(true);
         frame.pack();
@@ -443,12 +471,18 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
         proposition3.setEnabled(false);
         accepterP3Button.setVisible(false);
         refuserP3Button.setVisible(false);
-        if(currentP3View.equals("TNT")){
-            TNTButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP3View.equals("DHL")){
-            DHLButton.setBackground(Color.decode("#1F6617"));
-        }else if(currentP3View.equals("COLLISIMO")){
-            COLLISIMOButton.setBackground(Color.decode("#1F6617"));
+
+        for (Transporter transporter : transporters) {
+            if (currentP3View.equals("TNT") && transporter.getCompany().equals("TNT")) {
+                TNTButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setTransporter(transporter);
+            } else if (currentP3View.equals("DHL") && transporter.getCompany().equals("DHL")) {
+                DHLButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setTransporter(transporter);
+            } else if (currentP3View.equals("COLLISIMO") && transporter.getCompany().equals("COLLISIMO")) {
+                COLLISIMOButton.setBackground(Color.decode("#1F6617"));
+                currentOrder.setTransporter(transporter);
+            }
         }
         frame.pack();
     }
