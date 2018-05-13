@@ -2,6 +2,7 @@ package univ_smb.m1.info803.ui;
 
 import univ_smb.m1.info803.Application;
 import univ_smb.m1.info803.ApplicationListener;
+import univ_smb.m1.info803.model.Order;
 import univ_smb.m1.info803.model.Specification;
 
 import java.awt.*;
@@ -215,7 +216,12 @@ public class Home extends JFrame implements ActionListener,ApplicationListener {
             }
         } else if(source == envoyerButton1){
             //TODO : SEND APPEL 2
-
+            try {
+                app.sendOrder(new Order(currentSpec));
+                System.err.println("ORDER ENVOYER");
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
             appel2.setEnabled(false);
             envoyerButton1.setEnabled(false);
             proposition2.setVisible(true);
