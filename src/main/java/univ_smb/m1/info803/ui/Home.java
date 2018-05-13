@@ -342,8 +342,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                 }
                 EMBALEXButton.setBackground(Color.GRAY);
                 colorP2.setText(packaging.getColor());
-                weightP2.setText(String.valueOf(packaging.getWeight()));
-                sizeP2.setText(String.valueOf(packaging.getSize()));
+                weightP2.setText(String.valueOf(round(packaging.getWeight())));
+                sizeP2.setText(String.valueOf(round(packaging.getSize())));
             } else if (source == LESUButton && packaging.getCompany().equals("LESU")) {
                 currentP2View = "LESU";
                 if (EMBALEXButton.isEnabled()) {
@@ -354,8 +354,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                 }
                 LESUButton.setBackground(Color.GRAY);
                 colorP2.setText(packaging.getColor());
-                weightP2.setText(String.valueOf(packaging.getWeight()));
-                sizeP2.setText(String.valueOf(packaging.getSize()));
+                weightP2.setText(String.valueOf(round(packaging.getWeight())));
+                sizeP2.setText(String.valueOf(round(packaging.getSize())));
             } else if (source == FLEYButton && packaging.getCompany().equals("FLEY")) {
                 currentP2View = "FLEY";
                 if (LESUButton.isEnabled()) {
@@ -366,8 +366,8 @@ public class Home extends JFrame implements ActionListener, ApplicationListener 
                 }
                 FLEYButton.setBackground(Color.GRAY);
                 colorP2.setText(packaging.getColor());
-                weightP2.setText(String.valueOf(packaging.getWeight()));
-                sizeP2.setText(String.valueOf(packaging.getSize()));
+                weightP2.setText(String.valueOf(round(packaging.getWeight())));
+                sizeP2.setText(String.valueOf(round(packaging.getSize())));
             }
         }
         colorP2.setVisible(true);
