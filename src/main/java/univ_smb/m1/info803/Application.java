@@ -97,6 +97,7 @@ public class Application implements Runnable {
         while(true) {
             try {
 
+                // Réception des cahier des charges modifiés par les usines
                 if(plantToClientSpecificationsPipe.ready()) {
                     Specification spec = plantToClientSpecificationsPipe.read();
                     for(ApplicationListener listener : listeners) {
@@ -104,6 +105,7 @@ public class Application implements Runnable {
                     }
                 }
 
+                // Réception des packaging proposé par les suppliers
                 if(logisticsToClientPackagingPipe.ready()) {
                     Packaging packaging = logisticsToClientPackagingPipe.read();
                     for(ApplicationListener listener : listeners) {
@@ -111,6 +113,7 @@ public class Application implements Runnable {
                     }
                 }
 
+                // Réception des offres de transports des tranporteurs
                 if(logisticsToClientTransporterPipe.ready()) {
                     Transporter transporter= logisticsToClientTransporterPipe.read();
                     for(ApplicationListener listener : listeners) {
@@ -118,18 +121,18 @@ public class Application implements Runnable {
                     }
                 }
 
-            } catch (ClassNotFoundException | IOException e) {
+                // Pour éviter de faire chauffer le processeur pour rien :)
+                Thread.sleep(100);
+
+            } catch (ClassNotFoundException | IOException | InterruptedException e) {
                 e.printStackTrace();
+                for(Thread th : threads) {
+                    th.interrupt();
+                }
+                Thread.currentThread().interrupt();
+                break;
             }
         }
-
-        // Arrêt/Attente des threads
-        /*
-        for(Thread th : threads) {
-            // th.interrupt();
-            th.join();
-        }
-        */
     }
 
     public void sendSpecification(Specification spec) throws IOException {

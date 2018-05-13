@@ -28,10 +28,10 @@ public class DesignRunnable implements Runnable {
             }
 
             try {
+                // Récupération de la spec à traiter
                 Specification spec = plantToDesignSpecificationsPipe.read();
-                // System.out.println("Design " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
-                // System.out.println(spec);
 
+                // Création d'une altération au niveau des requirements.
                 List<String> newRequirements = new ArrayList<>();
                 int startIndex = ThreadLocalRandom.current().nextInt(10, 1000);
                 int nbRequirements = ThreadLocalRandom.current().nextInt(1, 10);
@@ -39,14 +39,12 @@ public class DesignRunnable implements Runnable {
                 for(int i=startIndex; i<startIndex + nbRequirements; ++i) {
                     newRequirements.add("REQ-" + i);
                 }
-
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, newRequirements);
 
+                // Envoi de l'alteration à l'entreprise concernée.
                 designToPlantSpecificationsPipe.write(alteration);
 
-                Thread.sleep(100);
-
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
                 break;

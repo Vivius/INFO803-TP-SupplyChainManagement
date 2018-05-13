@@ -41,17 +41,20 @@ public class TransporterRunnable implements Runnable {
             }
 
             try {
-
+                // Récupération d'une commande à analyser...
                 Order order = logisticsToTransporterOrdersPipe.read();
 
-                if(get0rderById(order.getId()) == null ) {
+                // On prend seulement les commandes qui n'ont jamais été traitées
+                if(findProcessedOrder(order.getId()) == null ) {
                     processedOrders.add(order);
 
+                    // Création d'un transporteur random...
                     int quantity = ThreadLocalRandom.current().nextInt(10, 1000);
                     int speed = ThreadLocalRandom.current().nextInt(10, 1000);
 
                     Transporter transporter = new Transporter(order, companyName, quantity, speed);
 
+                    // Attention ! Exclusion mutuelle (like SupplierRunnable).
                     mutex.lock();
                     transporterToLogisticsTransporterPipe.write(transporter);
                     mutex.unlock();
@@ -63,9 +66,7 @@ public class TransporterRunnable implements Runnable {
                     Thread.yield();
                 }
 
-                Thread.sleep(100);
-
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
                 break;
@@ -74,7 +75,7 @@ public class TransporterRunnable implements Runnable {
         }
     }
 
-    private Order get0rderById(int id) {
+    private Order findProcessedOrder(int id) {
         List<Order> result = processedOrders.stream().filter(o -> o.getId() == id).collect(Collectors.toList());
         if(result.size() > 0) {
             return result.get(0);

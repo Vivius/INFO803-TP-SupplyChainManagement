@@ -65,7 +65,7 @@ public class LogisticsRunnable implements Runnable {
                 // On s'occupe d'envoyer le cahier des charges d'un client aux usines (plants).
                 if(clientToLogisticsSpecificationsPipe.ready()) {
 
-                    // Réception d'un cahier des charges
+                    // Réception du cahier des charges
                     Specification spec = clientToLogisticsSpecificationsPipe.read();
 
                     // Envoi de la spec pour chaque fournisseur
@@ -79,15 +79,15 @@ public class LogisticsRunnable implements Runnable {
 
                 }
 
-                // Réception des commandes
+                // Réception des commandes des clients
                 if(clientToLogisiticsOrdersPipe.ready()) {
 
                     // On reçoit une nouvelle commande d'un client.
-                    // Cela implique qu'un cahier des charges (spécification) ait été validé.
+                    // Cela implique qu'un cahier des charges (spécification) ait été validé auparavant.
                     Order order = clientToLogisiticsOrdersPipe.read();
 
-                    // Nouvelle commande
-                    if(get0rderById(order.getId()) == null) {
+                    // Nouvelle commande car non en cours de traitement
+                    if(findProcessedOrder(order.getId()) == null) {
 
                         processedOrders.add(order);
 
@@ -113,13 +113,13 @@ public class LogisticsRunnable implements Runnable {
 
                 }
 
-                // Réception des offres d'emballage
+                // Réception des offres d'emballage (suppliers) et envoi au client
                 if(supplierToLogisticsPackagingPipe.ready()) {
                     Packaging packaging = supplierToLogisticsPackagingPipe.read();
                     logisticsToClientPackagingPipe.write(packaging);
                 }
 
-                // Réception des offres de transport
+                // Réception des offres de transport et envoi au client
                 if(transporterToLogisticsTransporterPipe.ready()) {
                     Transporter transporter = transporterToLogisticsTransporterPipe.read();
                     logisticsToClientTransporterPipe.write(transporter);
@@ -136,7 +136,7 @@ public class LogisticsRunnable implements Runnable {
         }
     }
 
-    private Order get0rderById(int id) {
+    private Order findProcessedOrder(int id) {
         List<Order> result = processedOrders.stream().filter(o -> o.getId() == id).collect(Collectors.toList());
         if(result.size() > 0) {
             return result.get(0);

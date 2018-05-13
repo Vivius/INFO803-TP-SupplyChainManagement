@@ -27,20 +27,19 @@ public class WorkshopRunnable implements Runnable {
             }
 
             try {
+                // Récupéation d'une spec à analyser et modifier
                 Specification spec = plantToWorkshopSpecificationsPipe.read();
-                // System.out.println("Workshop " + Thread.currentThread().getId() + " : Réception d'une cahier des charges à analyser");
-                // System.out.println(spec);
 
+                // Modification du coût et du temps
                 double randCost = ThreadLocalRandom.current().nextDouble(100, 10000);
                 int randTime = ThreadLocalRandom.current().nextInt(10, 200);
 
                 SpecificationAlteration alteration = new SpecificationAlteration(spec, new ArrayList<>(), randCost, randTime);
 
+                // Envoi de l'altération au l'usine (fabricant)
                 workshopToPlantSpecificationsPipe.write(alteration);
 
-                Thread.sleep(100);
-
-            } catch (IOException | ClassNotFoundException | InterruptedException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
                 break;

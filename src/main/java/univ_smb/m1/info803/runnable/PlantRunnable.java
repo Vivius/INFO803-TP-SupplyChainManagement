@@ -17,15 +17,13 @@ public class PlantRunnable implements Runnable {
     private final Pipe<Specification> logisticsToPlantSpecificationsPipe;
     private final Pipe<Specification> plantToDesignSpecificationsPipe;
     private final Pipe<Specification> plantToWorkshopSpecificationsPipe;
+    private final Pipe<Specification> plantToClientSpecificationsPipe;
+
     private final Pipe<SpecificationAlteration> workshopToPLantAlterationsPipe;
     private final Pipe<SpecificationAlteration> designToPlantAlterationsPipe;
-    private final Pipe<Specification> plantToClientSpecificationsPipe;
 
     private final List<Specification> specificationsProcessed;
     private final List<SpecificationAlteration> alterations;
-
-    private final Thread workshop;
-    private final Thread design;
 
     private final Lock mutex = new ReentrantLock(true);
 
@@ -43,11 +41,8 @@ public class PlantRunnable implements Runnable {
         this.workshopToPLantAlterationsPipe = new Pipe<>();
         this.designToPlantAlterationsPipe = new Pipe<>();
 
-        this.workshop = new Thread(new WorkshopRunnable(plantToWorkshopSpecificationsPipe, workshopToPLantAlterationsPipe));
-        this.design = new Thread(new DesignRunnable(plantToDesignSpecificationsPipe, designToPlantAlterationsPipe));
-
-        this.workshop.start();
-        this.design.start();
+        new Thread(new WorkshopRunnable(plantToWorkshopSpecificationsPipe, workshopToPLantAlterationsPipe)).start();
+        new Thread(new DesignRunnable(plantToDesignSpecificationsPipe, designToPlantAlterationsPipe)).start();
     }
 
     @Override
@@ -63,15 +58,14 @@ public class PlantRunnable implements Runnable {
 
                 // On traite les cahier des charges venant de la logisitique
                 if(logisticsToPlantSpecificationsPipe.ready()) {
+
                     Specification spec = logisticsToPlantSpecificationsPipe.read();
 
                     if(shouldProcessSpecification(spec)) {
                         spec.setCompany(companyName);
                         specificationsProcessed.add(spec);
-                        // System.out.println("Plant " + Thread.currentThread().getId() + " : Réception d'une cahier des charges");
-                        // System.out.println(spec);
 
-                        // Envoi du cahier des charges à l'atelier de prototypage et à l'atelier d'étude
+                        // Envoi du cahier des charges à l'atelier de prototypage et à l'atelier d'étude pour modifications
                         plantToDesignSpecificationsPipe.write(spec);
                         plantToWorkshopSpecificationsPipe.write(spec);
                     } else {
@@ -83,12 +77,12 @@ public class PlantRunnable implements Runnable {
                     }
                 }
 
-                // On récupère une altération venant d'un ateler Workshop si possible
+                // On récupère une altération venant d'un atelier Workshop si possible
                 if(workshopToPLantAlterationsPipe.ready()) {
                     alterations.add(workshopToPLantAlterationsPipe.read());
                 }
 
-                // On récupère une altération venant d'un ateler Design si possible
+                // On récupère une altération venant d'un atelier Design si possible
                 if(designToPlantAlterationsPipe.ready()) {
                     alterations.add(designToPlantAlterationsPipe.read());
                 }
@@ -100,8 +94,11 @@ public class PlantRunnable implements Runnable {
                         if(spec != null) {
                             spec.addAlteration(alt);
 
+                            // Si le workshop et le design ont envoyé chacun une altération, on envoie le nouveau cahier des charges au client.
                             if(spec.getAlterations().size() > 0 && spec.getAlterations().size() % 2 == 0) {
+                                mutex.lock();
                                 plantToClientSpecificationsPipe.write(spec);
+                                mutex.unlock();
                             }
 
                         } else {
